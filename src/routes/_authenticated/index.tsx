@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { MonthCalendar } from "@/components/calendar/MonthCalendar";
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/")({
   errorComponent: LoadError,
 });
 
-function LoadError({ error }: { error: Error }) {
+function LoadError({ error }: ErrorComponentProps) {
   const router = useRouter();
   return (
     <div className="mx-auto max-w-sm p-6 text-center">
