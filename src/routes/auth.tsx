@@ -76,6 +76,21 @@ function AuthPage() {
             </button>
           </div>
         </div>
+        {mode === "signin" && (
+          <button
+            type="button"
+            className="text-sm text-muted-foreground underline"
+            onClick={async () => {
+              setError(null); setInfo(null);
+              if (!email) { setError("Type your email first, then tap Forgot password."); return; }
+              const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+              if (error) setError(error.message);
+              else setInfo("We sent you an email with a link to set a new password.");
+            }}
+          >
+            Forgot password?
+          </button>
+        )}
         {error && <p className="text-sm text-destructive">{error}</p>}
         {info && <p className="rounded-md bg-comment p-3 text-sm text-comment-foreground">{info}</p>}
         <Button type="submit" className="w-full" disabled={busy}>
