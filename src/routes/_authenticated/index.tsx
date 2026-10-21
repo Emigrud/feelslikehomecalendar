@@ -7,7 +7,7 @@ import { Legend } from "@/components/calendar/Legend";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { addDemoBookings, apartmentQuery } from "@/lib/apartment-data";
-import type { DayInfo } from "@/lib/calendar";
+import { dayInfo } from "@/lib/calendar";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -41,7 +41,8 @@ function Index() {
   const { data: apt } = useSuspenseQuery(apartmentQuery);
   const now = new Date();
   const [ym, setYm] = useState({ y: now.getFullYear(), m: now.getMonth() });
-  const [selected, setSelected] = useState<DayInfo | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const selected = selectedDate ? dayInfo(selectedDate, apt.reservations) : null;
 
   const demo = useMutation({
     mutationFn: () => addDemoBookings(apt.id),
@@ -77,10 +78,10 @@ function Index() {
         month={ym.m}
         reservations={apt.reservations}
         onChangeMonth={(y, m) => setYm({ y, m })}
-        onSelectDay={setSelected}
+        onSelectDay={(d) => setSelectedDate(d.date)}
       />
       <Legend />
-      <DayDetails info={selected} onClose={() => setSelected(null)} />
+      <DayDetails info={selected} onClose={() => setSelectedDate(null)} editable />
     </main>
   );
 }

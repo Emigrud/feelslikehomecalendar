@@ -3,20 +3,25 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/u
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatShort, nights, sourceName, type DayInfo, type Reservation } from "@/lib/calendar";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ReservationEditForm } from "./ReservationEditForm";
 
 interface Props {
   info: DayInfo | null;
   onClose: () => void;
+  /** Owner can edit guest details; cleaner view leaves this off. */
+  editable?: boolean;
 }
 
-export function DayDetails({ info, onClose }: Props) {
+export function DayDetails({ info, onClose, editable = false }: Props) {
   const isMobile = useIsMobile();
   const open = !!info;
   const title = info ? formatShort(info.date) : "";
   const body = info && (
     <div className="space-y-4 px-4 pb-6 sm:px-0 sm:pb-0">
       {info.reservations.map((r) => (
-        <ReservationCard key={r.id} r={r} role={r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} />
+        <ReservationCard key={r.id} r={r} role={r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
       ))}
     </div>
   );
@@ -47,7 +52,8 @@ const ROLE = {
   stay: { label: "Staying", cls: "bg-staying text-staying-foreground" },
 };
 
-function ReservationCard({ r, role }: { r: Reservation; role: keyof typeof ROLE }) {
+function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof typeof ROLE; editable: boolean }) {
+  const [editing, setEditing] = useState(false);
   const kids = r.kidsAges ?? [];
   const missing = r.adults == null;
   return (
@@ -59,6 +65,7 @@ function ReservationCard({ r, role }: { r: Reservation; role: keyof typeof ROLE 
       <p className="text-lg font-semibold">
         {formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}
       </p>
+      {editing ? <ReservationEditForm r={r} onDone={() => setEditing(false)} /> : <>
       {missing ? (
         <p className="rounded-md bg-warning px-3 py-2 font-semibold text-warning-foreground">Guest numbers not filled in yet</p>
       ) : (
@@ -75,6 +82,8 @@ function ReservationCard({ r, role }: { r: Reservation; role: keyof typeof ROLE 
       {r.comment && (
         <div className="rounded-md border-l-4 border-comment-border bg-comment px-3 py-2 font-medium text-comment-foreground">{r.comment}</div>
       )}
+      {editable && !r.isBlocked && <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>}
+      </>}
     </div>
   );
 }
