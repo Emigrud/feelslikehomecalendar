@@ -54,7 +54,7 @@ export function MonthCalendar({ year, month, reservations, onChangeMonth, onSele
                 "day-cell relative flex min-h-14 flex-col items-start justify-between overflow-hidden rounded-md border p-1 text-left sm:min-h-20 sm:p-1.5",
                 `day-${info.kind}`,
                 !inMonth && "opacity-40",
-                key === todayKey && "ring-2 ring-foreground ring-offset-1 ring-offset-background",
+                key === todayKey && "ring-[1.5px] ring-foreground/70 ring-offset-1 ring-offset-background",
                 tappable && "cursor-pointer active:scale-[0.97] transition-transform",
               )}
             >
