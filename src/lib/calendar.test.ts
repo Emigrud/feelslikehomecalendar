@@ -9,7 +9,7 @@ const r = (o: Partial<Reservation>): Reservation => ({
 describe("calendar rules", () => {
   it("week starts on Monday", () => {
     // Oct 1 2026 is a Thursday -> grid starts Mon Sep 28
-    expect(monthGrid(2026, 9)[0].getDate()).toBe(28);
+    expect(monthGrid(2026, 9)[0]?.getDate()).toBe(28);
   });
   it("check-in day is green kind", () => expect(dayInfo("2026-10-10", [r({})]).kind).toBe("checkin"));
   it("check-out day is red kind", () => expect(dayInfo("2026-10-13", [r({})]).kind).toBe("checkout"));

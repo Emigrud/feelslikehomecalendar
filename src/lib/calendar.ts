@@ -18,9 +18,9 @@ export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "staying
 export interface DayInfo {
   date: string;
   kind: DayKind;
-  checkIn?: Reservation;
-  checkOut?: Reservation;
-  staying?: Reservation;
+  checkIn?: Reservation | undefined;
+  checkOut?: Reservation | undefined;
+  staying?: Reservation | undefined;
   /** Reservations to show in the popup, check-out first. */
   reservations: Reservation[];
 }
@@ -33,7 +33,7 @@ export function toKey(d: Date): string {
 }
 
 export function fromKey(key: string): Date {
-  const [y, m, d] = key.split("-").map(Number);
+  const [y = 0, m = 1, d = 1] = key.split("-").map(Number);
   return new Date(y, m - 1, d);
 }
 
