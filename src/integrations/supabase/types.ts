@@ -14,7 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      apartments: {
+        Row: {
+          airbnb_ical_url: string | null
+          booking_ical_url: string | null
+          cleaner_token: string
+          created_at: string
+          id: string
+          last_sync_error: string | null
+          last_synced_at: string | null
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          airbnb_ical_url?: string | null
+          booking_ical_url?: string | null
+          cleaner_token?: string
+          created_at?: string
+          id?: string
+          last_sync_error?: string | null
+          last_synced_at?: string | null
+          name?: string
+          owner_id: string
+        }
+        Update: {
+          airbnb_ical_url?: string | null
+          booking_ical_url?: string | null
+          cleaner_token?: string
+          created_at?: string
+          id?: string
+          last_sync_error?: string | null
+          last_synced_at?: string | null
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
+      reservations: {
+        Row: {
+          adults: number | null
+          apartment_id: string
+          check_in: string
+          check_out: string
+          comment: string | null
+          created_at: string
+          external_uid: string
+          guest_name: string | null
+          id: string
+          is_blocked: boolean
+          kids_ages: number[]
+          source: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          adults?: number | null
+          apartment_id: string
+          check_in: string
+          check_out: string
+          comment?: string | null
+          created_at?: string
+          external_uid: string
+          guest_name?: string | null
+          id?: string
+          is_blocked?: boolean
+          kids_ages?: number[]
+          source: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          adults?: number | null
+          apartment_id?: string
+          check_in?: string
+          check_out?: string
+          comment?: string | null
+          created_at?: string
+          external_uid?: string
+          guest_name?: string | null
+          id?: string
+          is_blocked?: boolean
+          kids_ages?: number[]
+          source?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_apartment_id_fkey"
+            columns: ["apartment_id"]
+            isOneToOne: false
+            referencedRelation: "apartments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
