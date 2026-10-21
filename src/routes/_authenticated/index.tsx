@@ -29,7 +29,7 @@ function LoadError({ error }: ErrorComponentProps) {
   const router = useRouter();
   return (
     <div className="mx-auto max-w-sm p-6 text-center">
-      <p className="mb-4 text-sm text-muted-foreground">Couldn't load the calendar: {error.message}</p>
+      <p className="mb-4 text-sm text-muted-foreground">Couldn't load the calendar: {error instanceof Error ? error.message : String(error)}</p>
       <Button onClick={() => router.invalidate()}>Try again</Button>
     </div>
   );
