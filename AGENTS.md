@@ -16,3 +16,4 @@
 - Calendar feeds use ical.js, HTTPS platform-domain allowlists, bounded downloads and no redirects; why: private feed downloads must not reach arbitrary network destinations or accept incomplete files.
 - Manual sync uses authenticated server functions; scheduled sync uses the generated managed cron authentication before admin access; why: owners remain RLS-scoped and unattended jobs need verified privileged access.
 - Feed application is an atomic SECURITY INVOKER database function which updates only imported fields and cancels missing non-demo UIDs per source; why: owner guest details survive sync and failed downloads cannot erase reservations.
+- Owner splits of merged stays live in their own table and expand into calendar parts at load time; a database trigger clears them when a stay's synced dates change; why: Booking.com merges back-to-back bookings and stale split dates must never show.
