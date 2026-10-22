@@ -50,6 +50,47 @@ export type Database = {
         }
         Relationships: []
       }
+      reservation_splits: {
+        Row: {
+          adults: number | null
+          comment: string | null
+          created_at: string
+          guest_name: string | null
+          id: string
+          kids_ages: number[]
+          reservation_id: string
+          start_date: string
+        }
+        Insert: {
+          adults?: number | null
+          comment?: string | null
+          created_at?: string
+          guest_name?: string | null
+          id?: string
+          kids_ages?: number[]
+          reservation_id: string
+          start_date: string
+        }
+        Update: {
+          adults?: number | null
+          comment?: string | null
+          created_at?: string
+          guest_name?: string | null
+          id?: string
+          kids_ages?: number[]
+          reservation_id?: string
+          start_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservation_splits_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reservations: {
         Row: {
           adults: number | null
