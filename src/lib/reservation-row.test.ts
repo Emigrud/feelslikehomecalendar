@@ -17,4 +17,20 @@ describe("rowToReservation", () => {
     expect(r.status).toBe("cancelled");
     expect(r.isBlocked).toBe(true);
   });
+  it("owner's 'booking' choice beats a synced block and its source", () => {
+    const r = rowToReservation({
+      id: "z", source: "airbnb", check_in: "2026-11-10", check_out: "2026-11-20",
+      guest_name: null, adults: null, kids_ages: null, comment: null, status: "active", is_blocked: true,
+      owner_kind: "booking", owner_source: "booking",
+    });
+    expect(r.isBlocked).toBe(false);
+    expect(r.source).toBe("booking");
+  });
+  it("owner's 'blocked' choice beats a synced booking", () => {
+    const r = rowToReservation({
+      id: "w", source: "airbnb", check_in: "2026-11-10", check_out: "2026-11-20",
+      guest_name: null, adults: null, kids_ages: null, comment: null, status: "active", is_blocked: false, owner_kind: "blocked",
+    });
+    expect(r.isBlocked).toBe(true);
+  });
 });

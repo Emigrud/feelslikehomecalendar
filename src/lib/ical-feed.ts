@@ -2,6 +2,8 @@ import ICAL from "ical.js";
 import type { Source } from "./calendar";
 
 export const SYNC_SCHEDULE = "0 */2 * * *";
+/** Closed stretches longer than this (e.g. months without prices) are hidden. */
+export const MAX_NIGHTS = 30;
 export type FeedEvent = { external_uid: string; check_in: string; check_out: string; is_blocked: boolean; status: "active" | "cancelled" };
 
 export function validateFeedUrl(value: string, source: Source): string {
@@ -37,10 +39,12 @@ export function parseFeed(text: string, source: Source): FeedEvent[] {
     const check_in = key(start), check_out = key(end);
     if (check_out <= check_in) throw new Error("Calendar contains invalid booking dates.");
     const summary = (event.summary ?? "").trim();
+    const longClosure = (Date.UTC(end.year, end.month - 1, end.day) - Date.UTC(start.year, start.month - 1, start.day)) / 86400000 > MAX_NIGHTS;
     return {
       external_uid: uid, check_in, check_out,
-      is_blocked: source === "airbnb" && /^(airbnb \(not available\)|not available|unavailable|blocked)(\b|$)/i.test(summary),
-      status: String(component.getFirstPropertyValue("status") ?? "").toUpperCase() === "CANCELLED" ? "cancelled" : "active",
+      // Booking.com's file labels bookings and closed dates identically, so all come in as blocked.
+      is_blocked: source === "booking" || /^(airbnb \(not available\)|not available|unavailable|blocked)(\b|$)/i.test(summary),
+      status: longClosure || String(component.getFirstPropertyValue("status") ?? "").toUpperCase() === "CANCELLED" ? "cancelled" : "active",
     };
   });
 }

@@ -5,6 +5,10 @@ import { formatShort, nights, sourceName, type DayInfo, type Reservation } from 
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import type { Source } from "@/lib/calendar";
 import { ReservationEditForm } from "./ReservationEditForm";
 import { SourceMark } from "./SourceMark";
 
@@ -22,7 +26,7 @@ export function DayDetails({ info, onClose, editable = false }: Props) {
   const body = info && (
     <div className="space-y-4 px-4 pb-6 sm:px-0 sm:pb-0">
       {info.reservations.map((r) => (
-        <ReservationCard key={r.id} r={r} role={r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
+        <ReservationCard key={r.id} r={r} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
       ))}
     </div>
   );
@@ -51,10 +55,37 @@ const ROLE = {
   out: { label: "Check-out", cls: "bg-checkout text-checkout-foreground" },
   in: { label: "Check-in", cls: "bg-checkin text-checkin-foreground" },
   stay: { label: "Staying", cls: "bg-staying text-staying-foreground" },
+  blocked: { label: "Blocked", cls: "bg-blocked text-blocked-foreground" },
 };
 
 function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof typeof ROLE; editable: boolean }) {
   const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const qc = useQueryClient();
+  const mark = async (kind: "booking" | "blocked", source?: Source) => {
+    setSaving(true);
+    const { error } = await supabase.from("reservations").update({ owner_kind: kind, owner_source: source ?? null }).eq("id", r.id);
+    setSaving(false);
+    if (error) { toast.error("Couldn't save. Please try again."); return; }
+    await qc.invalidateQueries({ queryKey: ["apartment"] });
+  };
+  if (r.isBlocked) {
+    return (
+      <div className="space-y-3 rounded-lg border bg-card p-4 text-base">
+        <span className={cn("rounded-md px-2 py-1 text-sm font-bold", ROLE.blocked.cls)}>{ROLE.blocked.label}</span>
+        <p className="text-lg font-semibold">{formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}</p>
+        {editable && (
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Is this actually a guest booking?</p>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" disabled={saving} onClick={() => mark("booking", "booking")}><SourceMark source="booking" className="h-4 w-4" />Mark as Booking.com booking</Button>
+              <Button size="sm" variant="outline" disabled={saving} onClick={() => mark("booking", "airbnb")}><SourceMark source="airbnb" className="h-4 w-4" />Mark as Airbnb booking</Button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
   const kids = r.kidsAges ?? [];
   const missing = r.adults == null;
   return (
@@ -86,7 +117,12 @@ function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof ty
       {r.comment && (
         <div className="rounded-md border-l-4 border-comment-border bg-comment px-3 py-2 font-medium text-comment-foreground">{r.comment}</div>
       )}
-      {editable && !r.isBlocked && <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>}
+      {editable && (
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>
+          <Button variant="ghost" size="sm" disabled={saving} onClick={() => mark("blocked")}>Mark as blocked</Button>
+        </div>
+      )}
       </>}
     </div>
   );

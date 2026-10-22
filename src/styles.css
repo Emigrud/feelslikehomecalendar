@@ -165,6 +165,8 @@
   --color-checkin-foreground: var(--checkin-foreground);
   --color-checkout: var(--checkout);
   --color-checkout-foreground: var(--checkout-foreground);
+  --color-blocked: var(--blocked);
+  --color-blocked-foreground: var(--blocked-foreground);
   --color-staying: var(--staying);
   --color-staying-foreground: var(--staying-foreground);
   --color-warning: var(--warning);

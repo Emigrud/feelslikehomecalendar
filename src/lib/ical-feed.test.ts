@@ -4,7 +4,14 @@ import { parseFeed, validateFeedUrl, SYNC_SCHEDULE } from "./ical-feed";
 const feed = (summary = "Reserved", status = "") => `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:reservation-1\r\nDTSTART;VALUE=DATE:20261022\r\nDTEND;VALUE=DATE:20261025\r\nSUMMARY:${summary}\r\n${status}END:VEVENT\r\nEND:VCALENDAR`;
 describe("calendar imports", () => {
   it("uses a two-hour schedule", () => expect(SYNC_SCHEDULE).toBe("0 */2 * * *"));
-  it("imports dates without guest fields", () => expect(parseFeed(feed(), "booking")).toEqual([{ external_uid: "reservation-1", check_in: "2026-10-22", check_out: "2026-10-25", is_blocked: false, status: "active" }]));
+  it("imports dates without guest fields", () => expect(parseFeed(feed(), "airbnb")).toEqual([{ external_uid: "reservation-1", check_in: "2026-10-22", check_out: "2026-10-25", is_blocked: false, status: "active" }]));
+  it("Booking.com CLOSED entries import as blocked", () => expect(parseFeed(feed("CLOSED - Not available"), "booking")[0]?.is_blocked).toBe(true));
+  it("hides closures longer than 30 nights", () => {
+    const long = feed().replace("DTEND;VALUE=DATE:20261025", "DTEND;VALUE=DATE:20261122");
+    expect(parseFeed(long, "booking")[0]?.status).toBe("cancelled");
+    const ok = feed().replace("DTEND;VALUE=DATE:20261025", "DTEND;VALUE=DATE:20261121");
+    expect(parseFeed(ok, "booking")[0]?.status).toBe("active");
+  });
   it("identifies Airbnb blocked dates", () => expect(parseFeed(feed("Airbnb (Not available)"), "airbnb")[0]?.is_blocked).toBe(true));
   it("recognizes explicit cancellations", () => expect(parseFeed(feed("Reserved", "STATUS:CANCELLED\r\n"), "airbnb")[0]?.status).toBe("cancelled"));
   it("accepts a genuinely empty calendar", () => expect(parseFeed("BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR", "airbnb")).toEqual([]));
