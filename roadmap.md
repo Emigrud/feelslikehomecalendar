@@ -3,4 +3,4 @@
 - [x] Safe manual sync that preserves guest details and hides cancellations.
 - [x] Managed automatic sync every two hours.
 - [x] Tests and signed-in settings verification.
-- [ ] Verify live booking imports — awaiting the owner's actual calendar links.
+- [ ] Verify live booking imports — awaiting the owner's actual calendar links.- [x] Split merged Booking.com stays (Split booking / Join back)

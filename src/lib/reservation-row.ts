@@ -31,3 +31,34 @@ export function rowToReservation(r: ReservationRow): Reservation {
     ownerKind: r.owner_kind === "booking" || r.owner_kind === "blocked" ? r.owner_kind : null,
   };
 }
+
+export interface SplitRow {
+  id: string;
+  reservation_id: string;
+  start_date: string;
+  guest_name: string | null;
+  adults: number | null;
+  kids_ages: number[] | null;
+  comment: string | null;
+}
+
+/** Turn one stay into consecutive parts at the owner's changeover dates. */
+export function expandSplits(r: Reservation, splits: SplitRow[]): Reservation[] {
+  const mine = splits
+    .filter((s) => s.reservation_id === r.id && s.start_date > r.checkIn && s.start_date < r.checkOut)
+    .sort((a, b) => a.start_date.localeCompare(b.start_date));
+  if (mine.length === 0 || r.isBlocked) return [r];
+  const ends = [...mine.map((s) => s.start_date), r.checkOut];
+  const parts: Reservation[] = [{ ...r, checkOut: ends[0]!, parentId: r.id, splitId: null }];
+  mine.forEach((s, i) => parts.push({
+    ...r, id: `${r.id}#${s.start_date}`, parentId: r.id, splitId: s.id,
+    checkIn: s.start_date, checkOut: ends[i + 1]!,
+    guestName: s.guest_name, adults: s.adults, kidsAges: s.kids_ages ?? [], comment: s.comment,
+  }));
+  return parts;
+}
+
+/** A changeover date must fall strictly inside the stay. */
+export function isValidSplitDate(r: Pick<Reservation, "checkIn" | "checkOut">, date: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) && date > r.checkIn && date < r.checkOut;
+}

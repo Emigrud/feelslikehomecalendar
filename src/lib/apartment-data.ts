@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { rowToReservation } from "./reservation-row";
+import { expandSplits, rowToReservation } from "./reservation-row";
 
 /** Load (or create on first sign-in) the owner's apartment with its reservations. */
 async function loadApartment() {
@@ -23,7 +23,10 @@ async function loadApartment() {
     .order("check_in");
   if (res.error) throw res.error;
 
-  return { id: apt.id, name: apt.name, reservations: (res.data ?? []).map(rowToReservation) };
+  const sp = await supabase.from("reservation_splits").select("id, reservation_id, start_date, guest_name, adults, kids_ages, comment");
+  if (sp.error) throw sp.error;
+
+  return { id: apt.id, name: apt.name, reservations: (res.data ?? []).flatMap((r) => expandSplits(rowToReservation(r), sp.data ?? [])) };
 }
 
 export const apartmentQuery = queryOptions({ queryKey: ["apartment"], queryFn: loadApartment });

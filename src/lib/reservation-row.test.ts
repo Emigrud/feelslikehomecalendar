@@ -34,3 +34,23 @@ describe("rowToReservation", () => {
     expect(r.isBlocked).toBe(true);
   });
 });
+
+import { expandSplits, isValidSplitDate } from "./reservation-row";
+describe("split stays", () => {
+  const base = { id: "r1", source: "booking" as const, checkIn: "2026-11-10", checkOut: "2026-11-20", status: "active" as const, isBlocked: false, adults: 2 };
+  const split = (d: string) => ({ id: "s-" + d, reservation_id: "r1", start_date: d, guest_name: null, adults: null, kids_ages: [], comment: null });
+  it("splitting 10–20 Nov at 14 Nov gives 10–14 and 14–20", () => {
+    const p = expandSplits(base, [split("2026-11-14")]);
+    expect(p.map((x) => [x.checkIn, x.checkOut])).toEqual([["2026-11-10", "2026-11-14"], ["2026-11-14", "2026-11-20"]]);
+    expect(p[0]!.adults).toBe(2);
+    expect(p[1]!.adults).toBeNull();
+  });
+  it("rejects a date outside the stay", () => {
+    expect(isValidSplitDate(base, "2026-11-10")).toBe(false);
+    expect(isValidSplitDate(base, "2026-11-21")).toBe(false);
+    expect(isValidSplitDate(base, "2026-11-15")).toBe(true);
+  });
+  it("ignores splits left outside new dates", () => {
+    expect(expandSplits({ ...base, checkOut: "2026-11-12" }, [split("2026-11-14")])).toHaveLength(1);
+  });
+});
