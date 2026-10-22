@@ -10,7 +10,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Source } from "@/lib/calendar";
 import { ReservationEditForm } from "./ReservationEditForm";
-import { Input } from "@/components/ui/input";
+import { SplitDateField } from "./SplitDateField";
+import { shiftISO } from "@/lib/date-text";
 import { isValidSplitDate } from "@/lib/reservation-row";
 import { SourceMark } from "./SourceMark";
 
