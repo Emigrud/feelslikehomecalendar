@@ -28,7 +28,7 @@ export function DayDetails({ info, onClose, editable = false }: Props) {
   const body = info && (
     <div className="space-y-4 px-4 pb-6 sm:px-0 sm:pb-0">
       {info.reservations.map((r) => (
-        <ReservationCard key={r.id} r={r} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
+        <ReservationCard key={r.id} r={r} dayDate={info.date} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
       ))}
     </div>
   );
