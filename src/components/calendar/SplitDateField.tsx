@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { enGB } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -79,7 +78,7 @@ export function SplitDateField({ value, onChange, min, max, id }: Props) {
           <PopoverContent align="start" className="w-auto p-0">
             <Calendar
               mode="single"
-              locale={enGB}
+              weekStartsOn={1}
               month={month}
               onMonthChange={setMonth}
               selected={chosen ? isoToDate(chosen) : undefined}
