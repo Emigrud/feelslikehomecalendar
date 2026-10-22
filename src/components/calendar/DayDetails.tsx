@@ -156,7 +156,7 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
       {editable && splitting && (
         <div className="space-y-2 rounded-md border p-3">
           <p className="text-sm text-muted-foreground">Date the next guest checks in (changeover day):</p>
-          <Input type="date" min={r.checkIn} max={r.checkOut} value={splitDate} onChange={(e) => setSplitDate(e.target.value)} />
+          <SplitDateField value={splitDate} onChange={setSplitDate} min={shiftISO(r.checkIn, 1)} max={shiftISO(r.checkOut, -1)} />
           <div className="flex gap-2">
             <Button size="sm" disabled={saving || !splitDate} onClick={addSplit}>Split here</Button>
             <Button size="sm" variant="ghost" onClick={() => setSplitting(false)}>Cancel</Button>
