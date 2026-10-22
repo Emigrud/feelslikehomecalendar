@@ -65,6 +65,11 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
   const [saving, setSaving] = useState(false);
   const [splitting, setSplitting] = useState(false);
   const [splitDate, setSplitDate] = useState("");
+  const openSplit = () => {
+    // Default to the tapped day itself, so the owner rarely has to type a date.
+    setSplitDate(dayDate && dayDate > r.checkIn ? dayDate : "");
+    setSplitting(true);
+  };
   const qc = useQueryClient();
   const addSplit = async () => {
     if (!isValidSplitDate(r, splitDate)) { toast.error("Pick a date after check-in and before check-out."); return; }
