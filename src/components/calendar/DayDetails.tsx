@@ -147,7 +147,7 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
       {editable && (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>
-          {nights(r) > 1 && <Button variant="outline" size="sm" onClick={() => setSplitting((v) => !v)}>Split booking</Button>}
+          {nights(r) > 1 && <Button variant="outline" size="sm" onClick={openSplit}>Split booking</Button>}
           {r.splitId && <Button variant="outline" size="sm" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
           <Button variant="ghost" size="sm" disabled={saving} onClick={() => mark("blocked")}>Mark as blocked</Button>
         </div>
