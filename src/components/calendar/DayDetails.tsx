@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Source } from "@/lib/calendar";
 import { ReservationEditForm } from "./ReservationEditForm";
+import { Input } from "@/components/ui/input";
+import { isValidSplitDate } from "@/lib/reservation-row";
 import { SourceMark } from "./SourceMark";
 
 interface Props {
@@ -61,10 +63,30 @@ const ROLE = {
 function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof typeof ROLE; editable: boolean }) {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [splitting, setSplitting] = useState(false);
+  const [splitDate, setSplitDate] = useState("");
   const qc = useQueryClient();
+  const addSplit = async () => {
+    if (!isValidSplitDate(r, splitDate)) { toast.error("Pick a date after check-in and before check-out."); return; }
+    setSaving(true);
+    const { error } = await supabase.from("reservation_splits").insert({ reservation_id: r.parentId ?? r.id, start_date: splitDate });
+    setSaving(false);
+    if (error) { toast.error("Couldn't split. Please try again."); return; }
+    setSplitting(false); setSplitDate("");
+    await qc.invalidateQueries({ queryKey: ["apartment"] });
+    toast.success("Booking split. Tap the new part to add its guests.");
+  };
+  const joinBack = async () => {
+    if (!r.splitId) return;
+    setSaving(true);
+    const { error } = await supabase.from("reservation_splits").delete().eq("id", r.splitId);
+    setSaving(false);
+    if (error) { toast.error("Couldn't join. Please try again."); return; }
+    await qc.invalidateQueries({ queryKey: ["apartment"] });
+  };
   const mark = async (kind: "booking" | "blocked", source?: Source) => {
     setSaving(true);
-    const { error } = await supabase.from("reservations").update({ owner_kind: kind, owner_source: source ?? null }).eq("id", r.id);
+    const { error } = await supabase.from("reservations").update({ owner_kind: kind, owner_source: source ?? null }).eq("id", r.parentId ?? r.id);
     setSaving(false);
     if (error) { toast.error("Couldn't save. Please try again."); return; }
     await qc.invalidateQueries({ queryKey: ["apartment"] });
@@ -120,7 +142,19 @@ function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof ty
       {editable && (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>
+          {nights(r) > 1 && <Button variant="outline" size="sm" onClick={() => setSplitting((v) => !v)}>Split booking</Button>}
+          {r.splitId && <Button variant="outline" size="sm" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
           <Button variant="ghost" size="sm" disabled={saving} onClick={() => mark("blocked")}>Mark as blocked</Button>
+        </div>
+      )}
+      {editable && splitting && (
+        <div className="space-y-2 rounded-md border p-3">
+          <p className="text-sm text-muted-foreground">Date the next guest checks in (changeover day):</p>
+          <Input type="date" min={r.checkIn} max={r.checkOut} value={splitDate} onChange={(e) => setSplitDate(e.target.value)} />
+          <div className="flex gap-2">
+            <Button size="sm" disabled={saving || !splitDate} onClick={addSplit}>Split here</Button>
+            <Button size="sm" variant="ghost" onClick={() => setSplitting(false)}>Cancel</Button>
+          </div>
         </div>
       )}
       </>}

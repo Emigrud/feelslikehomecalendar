@@ -18,10 +18,10 @@ export function ReservationEditForm({ r, onDone }: { r: Reservation; onDone: () 
 
   const save = useMutation({
     mutationFn: async (v: { adults: number | null; kids: number[] }) => {
-      const { error } = await supabase
-        .from("reservations")
-        .update({ adults: v.adults, kids_ages: v.kids, guest_name: name.trim() || null, comment: comment.trim() || null })
-        .eq("id", r.id);
+      const fields = { adults: v.adults, kids_ages: v.kids, guest_name: name.trim() || null, comment: comment.trim() || null };
+      const { error } = r.splitId
+        ? await supabase.from("reservation_splits").update(fields).eq("id", r.splitId)
+        : await supabase.from("reservations").update(fields).eq("id", r.parentId ?? r.id);
       if (error) throw error;
     },
     onSuccess: async () => { await qc.invalidateQueries({ queryKey: ["apartment"] }); onDone(); },
