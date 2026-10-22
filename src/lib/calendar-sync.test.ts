@@ -9,7 +9,7 @@ describe("safe sync", () => {
   beforeEach(() => vi.resetAllMocks());
   function client() {
     const eq = vi.fn().mockResolvedValue({ error: null });
-    const update = vi.fn(() => ({ eq }));
+    const update = vi.fn((_values: Record<string, unknown>) => ({ eq }));
     const rpc = vi.fn().mockResolvedValue({ error: null });
     const from = vi.fn(() => ({ update }));
     return { db: { rpc, from } as unknown as SupabaseClient<Database>, rpc, update };
