@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { dateToISO, formatTyping, fromDisplayDate, isoToDate, toDisplayDate } from "@/lib/date-text";
 
 interface Props {
-  /** Database date (yyyy-mm-dd) currently chosen, or "" when nothing is usable yet. */
+  /** Database date (yyyy-mm-dd) currently chosen, or "" when nothing usable is typed yet. */
   value: string;
   onChange: (iso: string) => void;
   /** Earliest and latest database date the owner may pick, both included. */
@@ -16,19 +16,20 @@ interface Props {
   id?: string;
 }
 
-/** Date box the owner can type into (yyyy/mm/dd) or fill from a month popup. */
+/** Date box the owner types into (yyyy/mm/dd) or fills from a month popup. */
 export function SplitDateField({ value, onChange, min, max, id }: Props) {
   const [text, setText] = useState(() => toDisplayDate(value));
   const [open, setOpen] = useState(false);
+  const [month, setMonth] = useState<Date>(() => isoToDate(value || min));
 
-  // If the caller sets a date from outside (tapping another day), show it.
+  // A date set from outside (tapping another day) must appear in the box.
   useEffect(() => {
     if (value && fromDisplayDate(text) !== value) setText(toDisplayDate(value));
   }, [value, text]);
 
   const typed = fromDisplayDate(text);
   const outOfRange = !!typed && (typed < min || typed > max);
-  const shown = isoToDate(typed && !outOfRange ? typed : value || min);
+  const chosen = typed && !outOfRange ? typed : value;
 
   const pick = (date: Date | undefined) => {
     if (!date) return;
@@ -56,7 +57,13 @@ export function SplitDateField({ value, onChange, min, max, id }: Props) {
           aria-invalid={outOfRange}
           className="pr-11 font-mono tracking-wide"
         />
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover
+          open={open}
+          onOpenChange={(o) => {
+            setOpen(o);
+            if (o) setMonth(isoToDate(chosen || min));
+          }}
+        >
           <PopoverTrigger asChild>
             <Button
               type="button"
@@ -71,15 +78,11 @@ export function SplitDateField({ value, onChange, min, max, id }: Props) {
           <PopoverContent align="start" className="w-auto p-0">
             <Calendar
               mode="single"
-              selected={typed && !outOfRange ? isoToDate(typed) : value ? isoToDate(value) : undefined}
-              defaultMonth={shown}
-              month={shown}
-              onMonthChange={(d) => onChange(value)}
+              month={month}
+              onMonthChange={setMonth}
+              selected={chosen ? isoToDate(chosen) : undefined}
               onSelect={pick}
-              disabled={(date) => {
-                const k = dateToISO(date);
-                return k < min || k > max;
-              }}
+              disabled={[{ before: isoToDate(min) }, { after: isoToDate(max) }]}
               captionLayout="dropdown"
             />
           </PopoverContent>
