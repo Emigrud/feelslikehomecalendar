@@ -50,7 +50,10 @@ export function monthGrid(year: number, month: number): Date[] {
 }
 
 export function dayInfo(date: string, all: Reservation[]): DayInfo {
-  const active = all.filter((r) => r.status === "active");
+  const live = all.filter((r) => r.status === "active");
+  // An Airbnb block with the exact dates of a Booking.com entry is the same stay copied over.
+  const active = live.filter((r) => !(r.isBlocked && r.source === "airbnb" && !r.ownerKind &&
+    live.some((b) => b.source === "booking" && b.checkIn === r.checkIn && b.checkOut === r.checkOut)));
   const guests = active.filter((r) => !r.isBlocked);
   const checkOut = guests.find((r) => r.checkOut === date);
   const checkIn = guests.find((r) => r.checkIn === date);

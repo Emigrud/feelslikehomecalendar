@@ -27,5 +27,9 @@ describe("calendar rules", () => {
     expect(guestLabel(r({ adults: 2, kidsAges: [4] }))).toBe("2+1");
     expect(guestLabel(r({ adults: 2, kidsAges: [] }))).toBe("2");
   });
+  it("hides an Airbnb block that mirrors a Booking.com stay", () => {
+    const info = dayInfo("2026-11-12", [r({ id: "a", isBlocked: true, checkIn: "2026-11-10", checkOut: "2026-11-20" }), r({ id: "b", source: "booking", isBlocked: true, ownerKind: "blocked", checkIn: "2026-11-10", checkOut: "2026-11-20" })]);
+    expect(info.reservations.map((x) => x.id)).toEqual(["b"]);
+  });
   it("counts nights", () => expect(nights(r({}))).toBe(3));
 });

@@ -42,8 +42,8 @@ export function parseFeed(text: string, source: Source): FeedEvent[] {
     const longClosure = (Date.UTC(end.year, end.month - 1, end.day) - Date.UTC(start.year, start.month - 1, start.day)) / 86400000 > MAX_NIGHTS;
     return {
       external_uid: uid, check_in, check_out,
-      // Booking.com's file labels bookings and closed dates identically, so all come in as blocked.
-      is_blocked: source === "booking" || /^(airbnb \(not available\)|not available|unavailable|blocked)(\b|$)/i.test(summary),
+      // Booking.com labels bookings and closures identically; treat them as bookings (owner can mark blocks).
+      is_blocked: source === "airbnb" && /^(airbnb \(not available\)|not available|unavailable|blocked)(\b|$)/i.test(summary),
       status: longClosure || String(component.getFirstPropertyValue("status") ?? "").toUpperCase() === "CANCELLED" ? "cancelled" : "active",
     };
   });
