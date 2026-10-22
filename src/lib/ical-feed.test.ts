@@ -5,7 +5,7 @@ const feed = (summary = "Reserved", status = "") => `BEGIN:VCALENDAR\r\nVERSION:
 describe("calendar imports", () => {
   it("uses a two-hour schedule", () => expect(SYNC_SCHEDULE).toBe("0 */2 * * *"));
   it("imports dates without guest fields", () => expect(parseFeed(feed(), "airbnb")).toEqual([{ external_uid: "reservation-1", check_in: "2026-10-22", check_out: "2026-10-25", is_blocked: false, status: "active" }]));
-  it("Booking.com CLOSED entries import as blocked", () => expect(parseFeed(feed("CLOSED - Not available"), "booking")[0]?.is_blocked).toBe(true));
+  it("Booking.com CLOSED entries import as reservations", () => expect(parseFeed(feed("CLOSED - Not available"), "booking")[0]?.is_blocked).toBe(false));
   it("hides closures longer than 30 nights", () => {
     const long = feed().replace("DTEND;VALUE=DATE:20261025", "DTEND;VALUE=DATE:20261122");
     expect(parseFeed(long, "booking")[0]?.status).toBe("cancelled");
