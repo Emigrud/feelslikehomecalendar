@@ -33,13 +33,17 @@ export function fromDisplayDate(text: string): string | null {
 /** Move a database date by whole days (leap years and month ends included). */
 export function shiftISO(iso: string, days: number): string {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "";
-  const [y, m, d] = iso.split("-").map(Number);
+  const y = Number(iso.slice(0, 4));
+  const m = Number(iso.slice(5, 7));
+  const d = Number(iso.slice(8, 10));
   return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
 }
 
 /** Database date -> local Date object, for the month picker. */
 export function isoToDate(iso: string): Date {
-  const [y, m, d] = iso.split("-").map(Number);
+  const y = Number(iso.slice(0, 4));
+  const m = Number(iso.slice(5, 7));
+  const d = Number(iso.slice(8, 10));
   return new Date(y, m - 1, d);
 }
 
