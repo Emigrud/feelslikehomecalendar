@@ -15,6 +15,13 @@
       "when": 1792654467106,
       "tag": "0001_apply_calendar_feed",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792658136007,
+      "tag": "0002_reservation_owner_override",
+      "breakpoints": true
     }
   ]
 }
