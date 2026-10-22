@@ -1,3 +1,5 @@
+import { SourceMark } from "./SourceMark";
+
 const ITEMS = [
   { cls: "day-checkin", label: "Check-in" },
   { cls: "day-checkout", label: "Check-out" },
@@ -17,7 +19,12 @@ export function Legend() {
           </span>
         ))}
       </div>
-      <p className="text-muted-foreground">A = Airbnb · B = Booking.com · "2+1" = adults + kids · "?" = guest numbers not filled in</p>
+      <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
+        <span className="flex items-center gap-1.5"><SourceMark source="airbnb" className="h-3.5 w-3.5" /> Airbnb</span>
+        <span className="flex items-center gap-1.5"><SourceMark source="booking" className="h-3.5 w-3.5" /> Booking.com</span>
+        <span>"2+1" = adults + kids</span>
+        <span>"?" = guest numbers not filled in</span>
+      </p>
     </div>
   );
 }
