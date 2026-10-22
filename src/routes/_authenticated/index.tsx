@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { MonthCalendar } from "@/components/calendar/MonthCalendar";
 import { DayDetails } from "@/components/calendar/DayDetails";
 import { Legend } from "@/components/calendar/Legend";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { addDemoBookings, apartmentQuery } from "@/lib/apartment-data";
+import { apartmentQuery } from "@/lib/apartment-data";
 import { dayInfo } from "@/lib/calendar";
 import { Settings } from "lucide-react";
 import { SyncButton } from "@/components/calendar/SyncButton";
@@ -46,10 +46,6 @@ function Index() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const selected = selectedDate ? dayInfo(selectedDate, apt.reservations) : null;
 
-  const demo = useMutation({
-    mutationFn: () => addDemoBookings(apt.id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["apartment"] }),
-  });
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -72,11 +68,8 @@ function Index() {
         <SyncButton />
       </div>
       {apt.reservations.length === 0 && (
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-card p-3 text-sm">
-          <span className="text-muted-foreground">No bookings yet.</span>
-          <Button size="sm" variant="secondary" disabled={demo.isPending} onClick={() => demo.mutate()}>
-            {demo.isPending ? "Adding…" : "Add demo bookings"}
-          </Button>
+        <div className="mb-4 rounded-lg border bg-card p-3 text-sm text-muted-foreground">
+          No bookings yet. Add your calendar links in Settings, then tap Sync now.
         </div>
       )}
       <MonthCalendar
