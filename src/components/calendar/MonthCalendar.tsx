@@ -1,7 +1,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { dayInfo, guestLabel, monthGrid, sourceLetter, toKey, type DayInfo, type Reservation } from "@/lib/calendar";
+import { dayInfo, guestLabel, monthGrid, toKey, type DayInfo, type Reservation } from "@/lib/calendar";
+import { SourceMark } from "./SourceMark";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -71,8 +72,9 @@ export function MonthCalendar({ year, month, reservations, onChangeMonth, onSele
 function Tag({ r }: { r: Reservation }) {
   const label = guestLabel(r);
   return (
-    <span className={cn("rounded px-1 text-[10px] font-bold leading-tight sm:text-xs bg-cell-tag text-cell-tag-foreground", label === "?" && "bg-warning text-warning-foreground")}>
-      {sourceLetter(r.source)} {label}
+    <span className={cn("flex items-center gap-1 rounded px-1 py-0.5 text-[10px] font-bold leading-tight sm:text-xs bg-cell-tag text-cell-tag-foreground", label === "?" && "bg-warning text-warning-foreground")}>
+      <SourceMark source={r.source} className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+      {label}
     </span>
   );
 }
