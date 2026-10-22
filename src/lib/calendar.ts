@@ -11,6 +11,8 @@ export interface Reservation {
   comment?: string | null;
   status: "active" | "cancelled";
   isBlocked: boolean;
+  /** Owner's manual choice; survives calendar syncs. */
+  ownerKind?: "booking" | "blocked" | null;
 }
 
 export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "staying" | "blocked";
@@ -63,6 +65,7 @@ export function dayInfo(date: string, all: Reservation[]): DayInfo {
   else if (blocked) kind = "blocked";
 
   const reservations = [checkOut, checkIn, staying].filter(Boolean) as Reservation[];
+  if (kind === "blocked" && blocked) reservations.push(blocked);
   return { date, kind, checkIn, checkOut, staying, reservations };
 }
 
