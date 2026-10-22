@@ -60,7 +60,7 @@ const ROLE = {
   blocked: { label: "Blocked", cls: "bg-blocked text-blocked-foreground" },
 };
 
-function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof typeof ROLE; editable: boolean }) {
+function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDate?: string; role: keyof typeof ROLE; editable: boolean }) {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [splitting, setSplitting] = useState(false);
