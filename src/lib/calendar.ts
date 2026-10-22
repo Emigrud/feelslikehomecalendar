@@ -77,7 +77,6 @@ export function nights(r: Reservation): number {
   return Math.round((fromKey(r.checkOut).getTime() - fromKey(r.checkIn).getTime()) / 86400000);
 }
 
-export const sourceLetter = (s: Source) => (s === "airbnb" ? "A" : "B");
 export const sourceName = (s: Source) => (s === "airbnb" ? "Airbnb" : "Booking.com");
 
 export function formatShort(key: string): string {

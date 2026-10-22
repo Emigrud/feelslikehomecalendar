@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ReservationEditForm } from "./ReservationEditForm";
+import { SourceMark } from "./SourceMark";
 
 interface Props {
   info: DayInfo | null;
@@ -60,7 +61,10 @@ function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof ty
     <div className="space-y-3 rounded-lg border bg-card p-4 text-base">
       <div className="flex items-center justify-between gap-2">
         <span className={cn("rounded-md px-2 py-1 text-sm font-bold", ROLE[role].cls)}>{ROLE[role].label}</span>
-        <span className="font-semibold text-muted-foreground">{sourceName(r.source)}</span>
+        <span className="flex items-center gap-1.5 font-semibold text-muted-foreground">
+          <SourceMark source={r.source} className="h-4 w-4" />
+          {sourceName(r.source)}
+        </span>
       </div>
       <p className="text-lg font-semibold">
         {formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}
