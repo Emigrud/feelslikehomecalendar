@@ -30,8 +30,7 @@ So the file really does use the same words for everything. The mistake was choos
 5. **Fix today's data.** Undo the earlier conversion so October shows correctly again, then resync and check October and November with you.
 
 ## Please confirm
-- Are **20–24 Oct** and **27–31 Oct** real Booking.com guests? If yes, I'll mark them as Booking.com bookings. They aren't in Booking.com's file right now, so the app can't detect them by itself.
-- Are **6–9 Nov** a real reservation or one of your blocks?
+- Confirmed: **20–24 Oct**, **27–31 Oct** and **6–9 Nov** are your own blocks, not guests. 20–24 and 27–31 Oct stay grey (Airbnb "Not available"). I'll mark 6–9 Nov as blocked once, and syncing won't change it back.
 
 ## Technical details
 - `parseFeed`: Booking.com `is_blocked = false` again; the >30-night rule (status cancelled) stays.
