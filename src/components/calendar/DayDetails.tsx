@@ -28,7 +28,7 @@ export function DayDetails({ info, onClose, editable = false }: Props) {
   const body = info && (
     <div className="space-y-4 px-4 pb-6 sm:px-0 sm:pb-0">
       {info.reservations.map((r) => (
-        <ReservationCard key={r.id} r={r} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
+        <ReservationCard key={r.id} r={r} dayDate={info.date} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
       ))}
     </div>
   );
@@ -60,11 +60,16 @@ const ROLE = {
   blocked: { label: "Blocked", cls: "bg-blocked text-blocked-foreground" },
 };
 
-function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof typeof ROLE; editable: boolean }) {
+function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDate?: string; role: keyof typeof ROLE; editable: boolean }) {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [splitting, setSplitting] = useState(false);
   const [splitDate, setSplitDate] = useState("");
+  const openSplit = () => {
+    // Default to the tapped day itself, so the owner rarely has to type a date.
+    setSplitDate(dayDate && dayDate > r.checkIn ? dayDate : "");
+    setSplitting(true);
+  };
   const qc = useQueryClient();
   const addSplit = async () => {
     if (!isValidSplitDate(r, splitDate)) { toast.error("Pick a date after check-in and before check-out."); return; }
@@ -142,7 +147,7 @@ function ReservationCard({ r, role, editable }: { r: Reservation; role: keyof ty
       {editable && (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>
-          {nights(r) > 1 && <Button variant="outline" size="sm" onClick={() => setSplitting((v) => !v)}>Split booking</Button>}
+          {nights(r) > 1 && <Button variant="outline" size="sm" onClick={openSplit}>Split booking</Button>}
           {r.splitId && <Button variant="outline" size="sm" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
           <Button variant="ghost" size="sm" disabled={saving} onClick={() => mark("blocked")}>Mark as blocked</Button>
         </div>
