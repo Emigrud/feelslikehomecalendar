@@ -8,6 +8,13 @@
       "when": 1792589891989,
       "tag": "0000_apartments_reservations",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792654467106,
+      "tag": "0001_apply_calendar_feed",
+      "breakpoints": true
     }
   ]
 }

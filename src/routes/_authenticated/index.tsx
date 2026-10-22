@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { MonthCalendar } from "@/components/calendar/MonthCalendar";
@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { addDemoBookings, apartmentQuery } from "@/lib/apartment-data";
 import { dayInfo } from "@/lib/calendar";
+import { Settings } from "lucide-react";
+import { SyncButton } from "@/components/calendar/SyncButton";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -61,13 +63,17 @@ function Index() {
       <header className="mb-4 flex items-start justify-between gap-2 px-1">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Cleaning calendar</p>
-          <h1 className="font-display text-3xl font-bold">{apt.name}</h1>
+          <h1 className="break-words font-display text-3xl font-bold">{apt.name}</h1>
         </div>
         <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
       </header>
+      <div className="mb-4 flex items-center justify-between gap-2 px-1">
+        <Button asChild size="sm" variant="ghost"><Link to="/settings"><Settings />Settings</Link></Button>
+        <SyncButton />
+      </div>
       {apt.reservations.length === 0 && (
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-card p-3 text-sm">
-          <span className="text-muted-foreground">No bookings yet. Calendar links are connected in a later step.</span>
+          <span className="text-muted-foreground">No bookings yet.</span>
           <Button size="sm" variant="secondary" disabled={demo.isPending} onClick={() => demo.mutate()}>
             {demo.isPending ? "Adding…" : "Add demo bookings"}
           </Button>

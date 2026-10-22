@@ -114,7 +114,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      apply_calendar_feed: {
+        Args: {
+          p_apartment_id: string
+          p_events: Json
+          p_source: string
+          p_url: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
