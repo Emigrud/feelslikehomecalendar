@@ -149,6 +149,10 @@
   --comment-border: oklch(0.828 0.107 89);
   --cell-tag: oklch(1 0 0 / 0.8);
   --cell-tag-foreground: oklch(0.27 0.017 250);
+  --brand-airbnb: oklch(0.665 0.19 25);
+  --brand-airbnb-ink: oklch(0.985 0.004 25);
+  --brand-booking: oklch(0.44 0.15 258);
+  --brand-booking-ink: oklch(0.985 0.004 258);
   --background: oklch(0.968 0.007 81);
   --foreground: oklch(0.256 0.017 250);
   --primary: oklch(0.3 0.05 250);
