@@ -13,6 +13,10 @@ export interface Reservation {
   isBlocked: boolean;
   /** Owner's manual choice; survives calendar syncs. */
   ownerKind?: "booking" | "blocked" | null;
+  /** Set when this is one part of a split stay: database reservation id. */
+  parentId?: string;
+  /** Set for the 2nd+ part of a split stay: id of its split row. */
+  splitId?: string | null;
 }
 
 export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "staying" | "blocked";
