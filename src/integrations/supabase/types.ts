@@ -57,6 +57,7 @@ export type Database = {
           created_at: string
           guest_name: string | null
           id: string
+          is_blocked: boolean | null
           kids_ages: number[]
           reservation_id: string
           start_date: string
@@ -67,6 +68,7 @@ export type Database = {
           created_at?: string
           guest_name?: string | null
           id?: string
+          is_blocked?: boolean | null
           kids_ages?: number[]
           reservation_id: string
           start_date: string
@@ -77,6 +79,7 @@ export type Database = {
           created_at?: string
           guest_name?: string | null
           id?: string
+          is_blocked?: boolean | null
           kids_ages?: number[]
           reservation_id?: string
           start_date?: string
@@ -100,6 +103,7 @@ export type Database = {
           comment: string | null
           created_at: string
           external_uid: string
+          first_part_blocked: boolean | null
           guest_name: string | null
           id: string
           is_blocked: boolean
@@ -118,6 +122,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           external_uid: string
+          first_part_blocked?: boolean | null
           guest_name?: string | null
           id?: string
           is_blocked?: boolean
@@ -136,6 +141,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           external_uid?: string
+          first_part_blocked?: boolean | null
           guest_name?: string | null
           id?: string
           is_blocked?: boolean

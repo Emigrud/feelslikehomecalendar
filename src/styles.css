@@ -198,6 +198,12 @@
     color: var(--checkout-foreground);
     border-color: transparent;
   }
+  /* top-left red (check-out), bottom-right grey (owner's block starts) */
+  .day-checkout-blocked {
+    background: linear-gradient(to bottom right, var(--checkout) 0 50%, var(--blocked) 50% 100%);
+    color: var(--checkout-foreground);
+    border-color: transparent;
+  }
 }
 
 @layer base {

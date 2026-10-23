@@ -54,3 +54,18 @@ describe("split stays", () => {
     expect(expandSplits({ ...base, checkOut: "2026-11-12" }, [split("2026-11-14")])).toHaveLength(1);
   });
 });
+
+import { dayInfo } from "./calendar";
+describe("blocking one part of a split stay", () => {
+  const stay = { id: "r2", source: "booking" as const, checkIn: "2026-10-24", checkOut: "2026-10-26", status: "active" as const, isBlocked: false };
+  const s = { id: "s1", reservation_id: "r2", start_date: "2026-10-25", guest_name: null, adults: null, kids_ages: [], comment: null, is_blocked: true };
+  it("24–26 split at 25 with the second part blocked: check-in 24, check-out + block 25", () => {
+    const parts = expandSplits(stay, [s]);
+    expect(dayInfo("2026-10-24", parts).kind).toBe("checkin");
+    expect(dayInfo("2026-10-25", parts).kind).toBe("checkout-blocked");
+  });
+  it("blocking one part leaves the other part a booking", () => {
+    const parts = expandSplits(stay, [s]);
+    expect(parts.map((p) => p.isBlocked)).toEqual([false, true]);
+  });
+});
