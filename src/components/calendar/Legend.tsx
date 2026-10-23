@@ -4,6 +4,7 @@ const ITEMS = [
   { cls: "day-checkin", label: "Check-in" },
   { cls: "day-checkout", label: "Check-out" },
   { cls: "day-changeover", label: "Out + in same day" },
+  { cls: "day-checkout-blocked", label: "Out + blocked same day" },
   { cls: "day-staying", label: "Guests staying" },
   { cls: "day-blocked", label: "Blocked" },
 ];
