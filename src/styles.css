@@ -198,9 +198,11 @@
     color: var(--checkout-foreground);
     border-color: transparent;
   }
-  /* top-left red (check-out), bottom-right grey (owner's block starts) */
+  /* top-left red (check-out), bottom-right grey with stripes (owner's block starts) */
   .day-checkout-blocked {
-    background: linear-gradient(to bottom right, var(--checkout) 0 50%, var(--blocked) 50% 100%);
+    background:
+      linear-gradient(to bottom right, var(--checkout) 0 50%, transparent 50% 100%),
+      repeating-linear-gradient(135deg, var(--blocked) 0 6px, color-mix(in oklab, var(--blocked) 85%, var(--blocked-foreground)) 6px 7px);
     color: var(--checkout-foreground);
     border-color: transparent;
   }
