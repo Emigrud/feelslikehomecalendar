@@ -140,9 +140,17 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
           {sourceName(r.source)}
         </span>
       </div>
-      <p className="text-lg font-semibold">
-        {formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}
-      </p>
+      <div className="flex items-center gap-2">
+        <p className="text-lg font-semibold">
+          {formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}
+        </p>
+        {editable && !r.parentId && (
+          <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" aria-label="Change stay dates" onClick={() => setEditingDates((v) => !v)}>
+            <Pencil className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+      {editingDates && <StayDatesForm r={r} onDone={() => setEditingDates(false)} />}
       {editing ? <ReservationEditForm r={r} onDone={() => setEditing(false)} /> : <>
       {missing ? (
         <p className="rounded-md bg-warning px-3 py-2 font-semibold text-warning-foreground">Guest numbers not filled in yet</p>

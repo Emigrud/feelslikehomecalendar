@@ -69,3 +69,13 @@ describe("blocking one part of a split stay", () => {
     expect(parts.map((p) => p.isBlocked)).toEqual([false, true]);
   });
 });
+
+import { stayDates as _stayDates } from "./reservation-row";
+describe("owner stay dates", () => {
+  it("owner dates replace platform dates", () => {
+    expect(_stayDates({ check_in: "2026-10-24", check_out: "2026-10-26", owner_check_in: null, owner_check_out: "2026-10-25" })).toEqual({ checkIn: "2026-10-24", checkOut: "2026-10-25" });
+  });
+  it("falls back when owner dates are out of order", () => {
+    expect(_stayDates({ check_in: "2026-10-24", check_out: "2026-10-26", owner_check_in: "2026-10-27", owner_check_out: null })).toEqual({ checkIn: "2026-10-24", checkOut: "2026-10-26" });
+  });
+});
