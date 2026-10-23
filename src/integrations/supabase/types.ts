@@ -108,6 +108,8 @@ export type Database = {
           id: string
           is_blocked: boolean
           kids_ages: number[]
+          owner_check_in: string | null
+          owner_check_out: string | null
           owner_kind: string | null
           owner_source: string | null
           source: string
@@ -127,6 +129,8 @@ export type Database = {
           id?: string
           is_blocked?: boolean
           kids_ages?: number[]
+          owner_check_in?: string | null
+          owner_check_out?: string | null
           owner_kind?: string | null
           owner_source?: string | null
           source: string
@@ -146,6 +150,8 @@ export type Database = {
           id?: string
           is_blocked?: boolean
           kids_ages?: number[]
+          owner_check_in?: string | null
+          owner_check_out?: string | null
           owner_kind?: string | null
           owner_source?: string | null
           source?: string

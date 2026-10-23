@@ -36,6 +36,13 @@
       "when": 1792741622413,
       "tag": "0004_split_part_blocked",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792746429890,
+      "tag": "0005_owner_stay_dates",
+      "breakpoints": true
     }
   ]
 }

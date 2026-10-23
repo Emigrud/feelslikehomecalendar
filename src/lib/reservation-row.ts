@@ -14,6 +14,15 @@ export interface ReservationRow {
   owner_kind?: string | null;
   owner_source?: string | null;
   first_part_blocked?: boolean | null;
+  owner_check_in?: string | null;
+  owner_check_out?: string | null;
+}
+
+/** Owner-adjusted dates win over the platform's; a broken pair falls back to the platform dates. */
+export function stayDates(r: Pick<ReservationRow, "check_in" | "check_out" | "owner_check_in" | "owner_check_out">) {
+  const checkIn = r.owner_check_in ?? r.check_in;
+  const checkOut = r.owner_check_out ?? r.check_out;
+  return checkIn < checkOut ? { checkIn, checkOut } : { checkIn: r.check_in, checkOut: r.check_out };
 }
 
 /** Convert a database row into the calendar's Reservation shape. */
@@ -21,8 +30,7 @@ export function rowToReservation(r: ReservationRow): Reservation {
   return {
     id: r.id,
     source: (r.owner_kind === "booking" && r.owner_source ? r.owner_source : r.source) === "booking" ? "booking" : "airbnb",
-    checkIn: r.check_in,
-    checkOut: r.check_out,
+    ...stayDates(r),
     guestName: r.guest_name,
     adults: r.adults,
     kidsAges: r.kids_ages ?? [],
