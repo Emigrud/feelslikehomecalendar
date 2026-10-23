@@ -29,6 +29,13 @@
       "when": 1792660918686,
       "tag": "0003_reservation_splits",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792741622413,
+      "tag": "0004_split_part_blocked",
+      "breakpoints": true
     }
   ]
 }
