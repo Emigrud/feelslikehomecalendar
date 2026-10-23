@@ -10,7 +10,7 @@ Use the Split button you already have, and let each part be marked separately:
 3. **Mark as booking** turns it back, and **Join back** undoes the split.
 4. Syncing keeps this. If Booking.com changes the overall dates, the split is cleared, as it is now.
 
-Right now "Mark as blocked" on a split part greys out the whole 24–26 stretch. You've already split at the 25th and pressed it, so that's what you see now. I'll change it so only the tapped part turns grey. Then I'll switch 24–25 back to the guest's stay and leave 25–26 grey.
+Right now "Mark as blocked" on a split part greys out the whole stay. I'll change it so only the tapped part turns grey. The day it starts then shows half check-out (red) and half blocked (grey). Your split at 25 Oct is already there, so you'll only need to tap the 25–26 part and choose **Mark as blocked**.
 
 ## Technical details
 - Add `is_blocked boolean` (nullable, owner-set) to `reservation_splits`. In `expandSplits`, a part whose split row has it set becomes `isBlocked: true`. The first part uses the reservation's own `owner_kind` only when no splits exist. Otherwise add a `first_part_blocked` flag on the reservation and keep it in the existing clear-on-date-change trigger.
