@@ -14,6 +14,8 @@ import { SplitDateField } from "./SplitDateField";
 import { shiftISO } from "@/lib/date-text";
 import { isValidSplitDate } from "@/lib/reservation-row";
 import { SourceMark } from "./SourceMark";
+import { StayDatesForm } from "./StayDatesForm";
+import { Pencil } from "lucide-react";
 
 interface Props {
   info: DayInfo | null;
@@ -63,6 +65,7 @@ const ROLE = {
 
 function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDate?: string; role: keyof typeof ROLE; editable: boolean }) {
   const [editing, setEditing] = useState(false);
+  const [editingDates, setEditingDates] = useState(false);
   const [saving, setSaving] = useState(false);
   const [splitting, setSplitting] = useState(false);
   const [splitDate, setSplitDate] = useState("");
