@@ -17,9 +17,11 @@ export interface Reservation {
   parentId?: string;
   /** Set for the 2nd+ part of a split stay: id of its split row. */
   splitId?: string | null;
+  /** Owner greyed out the first part of a split stay. */
+  firstPartBlocked?: boolean | null;
 }
 
-export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "staying" | "blocked";
+export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "checkout-blocked" | "staying" | "blocked";
 
 export interface DayInfo {
   date: string;
@@ -67,12 +69,13 @@ export function dayInfo(date: string, all: Reservation[]): DayInfo {
   let kind: DayKind = "empty";
   if (checkOut && checkIn) kind = "changeover";
   else if (checkIn) kind = "checkin";
+  else if (checkOut && blocked) kind = "checkout-blocked";
   else if (checkOut) kind = "checkout";
   else if (staying) kind = "staying";
   else if (blocked) kind = "blocked";
 
   const reservations = [checkOut, checkIn, staying].filter(Boolean) as Reservation[];
-  if (kind === "blocked" && blocked) reservations.push(blocked);
+  if ((kind === "blocked" || kind === "checkout-blocked") && blocked) reservations.push(blocked);
   return { date, kind, checkIn, checkOut, staying, reservations };
 }
 

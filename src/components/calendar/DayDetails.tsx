@@ -92,7 +92,13 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
   };
   const mark = async (kind: "booking" | "blocked", source?: Source) => {
     setSaving(true);
-    const { error } = await supabase.from("reservations").update({ owner_kind: kind, owner_source: source ?? null }).eq("id", r.parentId ?? r.id);
+    const blocked = kind === "blocked";
+    // A part of a split stay is greyed out on its own; the rest of the stay is left alone.
+    const { error } = r.splitId
+      ? await supabase.from("reservation_splits").update({ is_blocked: blocked }).eq("id", r.splitId)
+      : r.parentId
+        ? await supabase.from("reservations").update({ first_part_blocked: blocked }).eq("id", r.parentId)
+        : await supabase.from("reservations").update({ owner_kind: kind, owner_source: source ?? null }).eq("id", r.id);
     setSaving(false);
     if (error) { toast.error("Couldn't save. Please try again."); return; }
     await qc.invalidateQueries({ queryKey: ["apartment"] });
@@ -102,7 +108,13 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
       <div className="space-y-3 rounded-lg border bg-card p-4 text-base">
         <span className={cn("rounded-md px-2 py-1 text-sm font-bold", ROLE.blocked.cls)}>{ROLE.blocked.label}</span>
         <p className="text-lg font-semibold">{formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}</p>
-        {editable && (
+        {editable && r.parentId && (
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" disabled={saving} onClick={() => mark("booking")}><SourceMark source={r.source} className="h-4 w-4" />Mark as booking</Button>
+            {r.splitId && <Button size="sm" variant="outline" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
+          </div>
+        )}
+        {editable && !r.parentId && (
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Is this actually a guest booking?</p>
             <div className="flex flex-wrap gap-2">
