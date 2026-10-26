@@ -43,7 +43,7 @@ export function MonthCalendar({ year, month, reservations, onChangeMonth, onSele
           const key = toKey(date);
           const info = dayInfo(key, reservations);
           const inMonth = date.getMonth() === month;
-          const tappable = info.reservations.length > 0;
+          const tappable = true;
           return (
             <button
               key={key}

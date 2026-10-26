@@ -18,7 +18,7 @@ async function loadApartment() {
 
   const res = await supabase
     .from("reservations")
-    .select("id, source, check_in, check_out, guest_name, adults, kids_ages, comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out")
+    .select("id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out")
     .eq("apartment_id", apt.id)
     .order("check_in");
   if (res.error) throw res.error;
