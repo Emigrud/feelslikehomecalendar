@@ -33,3 +33,15 @@ describe("calendar rules", () => {
   });
   it("counts nights", () => expect(nights(r({}))).toBe(3));
 });
+
+describe("owner-added booking inside a synced stay", () => {
+  const synced = r({ id: "s", source: "booking", checkIn: "2026-11-10", checkOut: "2026-11-20" });
+  const mine = r({ id: "m", checkIn: "2026-11-14", checkOut: "2026-11-17", isManual: true });
+  it("its check-in day is a changeover", () => {
+    const i = dayInfo("2026-11-14", [synced, mine]);
+    expect(i.kind).toBe("changeover");
+    expect(i.checkIn?.id).toBe("m");
+  });
+  it("its middle days show the owner's guest", () => expect(dayInfo("2026-11-15", [synced, mine]).staying?.id).toBe("m"));
+  it("after it ends the synced stay shows again", () => expect(dayInfo("2026-11-18", [synced, mine]).staying?.id).toBe("s"));
+});

@@ -63,9 +63,21 @@ export function dayInfo(date: string, all: Reservation[]): DayInfo {
   const active = live.filter((r) => !(r.isBlocked && r.source === "airbnb" && !r.ownerKind &&
     live.some((b) => b.source === "booking" && b.checkIn === r.checkIn && b.checkOut === r.checkOut)));
   const guests = active.filter((r) => !r.isBlocked);
-  const checkOut = guests.find((r) => r.checkOut === date);
-  const checkIn = guests.find((r) => r.checkIn === date);
-  const staying = guests.find((r) => r.checkIn < date && date < r.checkOut);
+  // Owner-added bookings win over synced stays on the days they cover.
+  const manual = guests.filter((r) => r.isManual);
+  const synced = guests.filter((r) => !r.isManual);
+  const mIn = manual.find((r) => r.checkIn === date);
+  const mOut = manual.find((r) => r.checkOut === date);
+  const mStay = manual.find((r) => r.checkIn < date && date < r.checkOut);
+  const covering = synced.find((r) => r.checkIn < date && date < r.checkOut);
+  let checkIn: Reservation | undefined, checkOut: Reservation | undefined, staying: Reservation | undefined;
+  if (mStay) {
+    staying = mStay;
+  } else {
+    checkIn = mIn ?? (mOut ? undefined : synced.find((r) => r.checkIn === date));
+    checkOut = mOut ?? synced.find((r) => r.checkOut === date) ?? (mIn ? covering : undefined);
+    staying = checkIn || checkOut ? (mOut && !mIn ? covering : undefined) : covering;
+  }
   const blocked = active.find((r) => r.isBlocked && r.checkIn <= date && date < r.checkOut);
 
   let kind: DayKind = "empty";
