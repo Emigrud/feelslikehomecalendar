@@ -36,6 +36,9 @@ export function DayDetails({ info, onClose, editable = false, apartmentId, allRe
       {editable && apartmentId && info.reservations.length === 0 && (
         <AddEntryForm key={info.date} date={info.date} apartmentId={apartmentId} reservations={allReservations} />
       )}
+      {editable && apartmentId && ["checkin", "checkout", "changeover", "staying"].includes(info.kind) && (
+        <AddEntryForm key={`occ-${info.date}`} occupied date={info.date} apartmentId={apartmentId} reservations={allReservations} />
+      )}
       {!editable && info.reservations.length === 0 && <p className="text-muted-foreground">Nothing on this day.</p>}
     </div>
   );
