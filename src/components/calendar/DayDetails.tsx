@@ -197,22 +197,6 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
       {editable && (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>
-          {nights(r) > 1 && <Button variant="outline" size="sm" onClick={openSplit}>Split booking</Button>}
-          {r.splitId && <Button variant="outline" size="sm" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
-          <Button variant="ghost" size="sm" disabled={saving} onClick={() => mark("blocked")}>Mark as blocked</Button>
-          {r.isManual && !r.parentId && <Button variant="ghost" size="sm" className="text-destructive" disabled={saving} onClick={remove}>Delete</Button>}
-        </div>
-      )}
-      {editable && splitting && (
-        <div className="space-y-2 rounded-md border p-3">
-          <p className="text-sm text-muted-foreground">Date the next guest checks in (changeover day):</p>
-          <SplitDateField value={splitDate} onChange={setSplitDate} min={shiftISO(r.checkIn, 1)} max={shiftISO(r.checkOut, -1)} />
-          <div className="flex gap-2">
-            <Button size="sm" disabled={saving || !splitDate} onClick={addSplit}>Split here</Button>
-            <Button size="sm" variant="ghost" onClick={() => setSplitting(false)}>Cancel</Button>
-          </div>
-        </div>
-      )}
       </>}
     </div>
   );
