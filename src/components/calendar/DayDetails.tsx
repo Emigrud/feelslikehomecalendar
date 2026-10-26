@@ -16,15 +16,18 @@ import { isValidSplitDate } from "@/lib/reservation-row";
 import { SourceMark } from "./SourceMark";
 import { StayDatesForm } from "./StayDatesForm";
 import { Pencil } from "lucide-react";
+import { AddEntryForm } from "./AddEntryForm";
 
 interface Props {
   info: DayInfo | null;
   onClose: () => void;
   /** Owner can edit guest details; cleaner view leaves this off. */
   editable?: boolean;
+  apartmentId?: string;
+  allReservations?: Reservation[];
 }
 
-export function DayDetails({ info, onClose, editable = false }: Props) {
+export function DayDetails({ info, onClose, editable = false, apartmentId, allReservations = [] }: Props) {
   const isMobile = useIsMobile();
   const open = !!info;
   const title = info ? formatShort(info.date) : "";
@@ -33,6 +36,10 @@ export function DayDetails({ info, onClose, editable = false }: Props) {
       {info.reservations.map((r) => (
         <ReservationCard key={r.id} r={r} dayDate={info.date} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
       ))}
+      {editable && apartmentId && info.reservations.length === 0 && (
+        <AddEntryForm key={info.date} date={info.date} apartmentId={apartmentId} reservations={allReservations} />
+      )}
+      {!editable && info.reservations.length === 0 && <p className="text-muted-foreground">Nothing on this day.</p>}
     </div>
   );
 
