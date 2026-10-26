@@ -79,3 +79,14 @@ describe("owner stay dates", () => {
     expect(_stayDates({ check_in: "2026-10-24", check_out: "2026-10-26", owner_check_in: "2026-10-27", owner_check_out: null })).toEqual({ checkIn: "2026-10-24", checkOut: "2026-10-26" });
   });
 });
+
+import { rowToReservation as toRes } from "./reservation-row";
+describe("hand-added entries", () => {
+  const base = { id: "m", source: "airbnb", check_in: "2026-11-01", check_out: "2026-11-03", guest_name: null, adults: null, kids_ages: [], comment: null, status: "active", is_blocked: false };
+  it("marks manual- uids as manual", () => {
+    expect(toRes({ ...base, external_uid: "manual-abc" }).isManual).toBe(true);
+  });
+  it("synced uids are not manual", () => {
+    expect(toRes({ ...base, external_uid: "abc@airbnb.com" }).isManual).toBe(false);
+  });
+});
