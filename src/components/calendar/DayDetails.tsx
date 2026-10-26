@@ -120,20 +120,8 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
         {editable && r.isManual && !r.parentId && (
           <Button size="sm" variant="ghost" className="text-destructive" disabled={saving} onClick={remove}>Delete block</Button>
         )}
-        {editable && r.parentId && (
-          <div className="flex flex-wrap gap-2">
-            <Button size="sm" disabled={saving} onClick={() => mark("booking")}><SourceMark source={r.source} className="h-4 w-4" />Mark as booking</Button>
-            {r.splitId && <Button size="sm" variant="outline" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
-          </div>
-        )}
-        {editable && !r.parentId && (
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">Is this actually a guest booking?</p>
-            <div className="flex flex-wrap gap-2">
-              <Button size="sm" disabled={saving} onClick={() => mark("booking", "booking")}><SourceMark source="booking" className="h-4 w-4" />Mark as Booking.com booking</Button>
-              <Button size="sm" variant="outline" disabled={saving} onClick={() => mark("booking", "airbnb")}><SourceMark source="airbnb" className="h-4 w-4" />Mark as Airbnb booking</Button>
-            </div>
-          </div>
+        {editable && r.splitId && (
+          <Button size="sm" variant="outline" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>
         )}
       </div>
     );
