@@ -16,6 +16,7 @@ export interface ReservationRow {
   first_part_blocked?: boolean | null;
   owner_check_in?: string | null;
   owner_check_out?: string | null;
+  external_uid?: string | null;
 }
 
 /** Owner-adjusted dates win over the platform's; a broken pair falls back to the platform dates. */
@@ -39,6 +40,7 @@ export function rowToReservation(r: ReservationRow): Reservation {
     isBlocked: r.owner_kind === "booking" ? false : r.owner_kind === "blocked" ? true : r.is_blocked,
     ownerKind: r.owner_kind === "booking" || r.owner_kind === "blocked" ? r.owner_kind : null,
     firstPartBlocked: r.first_part_blocked ?? null,
+    isManual: !!r.external_uid?.startsWith("manual-"),
   };
 }
 

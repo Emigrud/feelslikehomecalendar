@@ -19,6 +19,8 @@ export interface Reservation {
   splitId?: string | null;
   /** Owner greyed out the first part of a split stay. */
   firstPartBlocked?: boolean | null;
+  /** Added by hand by the owner; syncs never touch it and it can be deleted. */
+  isManual?: boolean;
 }
 
 export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "checkout-blocked" | "staying" | "blocked";

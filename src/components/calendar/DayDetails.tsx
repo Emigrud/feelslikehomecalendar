@@ -16,15 +16,18 @@ import { isValidSplitDate } from "@/lib/reservation-row";
 import { SourceMark } from "./SourceMark";
 import { StayDatesForm } from "./StayDatesForm";
 import { Pencil } from "lucide-react";
+import { AddEntryForm } from "./AddEntryForm";
 
 interface Props {
   info: DayInfo | null;
   onClose: () => void;
   /** Owner can edit guest details; cleaner view leaves this off. */
   editable?: boolean;
+  apartmentId?: string;
+  allReservations?: Reservation[];
 }
 
-export function DayDetails({ info, onClose, editable = false }: Props) {
+export function DayDetails({ info, onClose, editable = false, apartmentId, allReservations = [] }: Props) {
   const isMobile = useIsMobile();
   const open = !!info;
   const title = info ? formatShort(info.date) : "";
@@ -33,6 +36,10 @@ export function DayDetails({ info, onClose, editable = false }: Props) {
       {info.reservations.map((r) => (
         <ReservationCard key={r.id} r={r} dayDate={info.date} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
       ))}
+      {editable && apartmentId && info.reservations.length === 0 && (
+        <AddEntryForm key={info.date} date={info.date} apartmentId={apartmentId} reservations={allReservations} />
+      )}
+      {!editable && info.reservations.length === 0 && <p className="text-muted-foreground">Nothing on this day.</p>}
     </div>
   );
 
@@ -106,11 +113,30 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
     if (error) { toast.error("Couldn't save. Please try again."); return; }
     await qc.invalidateQueries({ queryKey: ["apartment"] });
   };
+  const remove = async () => {
+    if (!window.confirm("Delete this entry?")) return;
+    setSaving(true);
+    const { error } = await supabase.from("reservations").delete().eq("id", r.id);
+    setSaving(false);
+    if (error) { toast.error("Couldn't delete. Please try again."); return; }
+    await qc.invalidateQueries({ queryKey: ["apartment"] });
+  };
   if (r.isBlocked) {
     return (
       <div className="space-y-3 rounded-lg border bg-card p-4 text-base">
         <span className={cn("rounded-md px-2 py-1 text-sm font-bold", ROLE.blocked.cls)}>{ROLE.blocked.label}</span>
-        <p className="text-lg font-semibold">{formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-lg font-semibold">{formatShort(r.checkIn)} → {formatShort(r.checkOut)}, {nights(r)} {nights(r) === 1 ? "night" : "nights"}</p>
+          {editable && !r.parentId && (
+            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" aria-label="Change dates" onClick={() => setEditingDates((v) => !v)}>
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        {editingDates && <StayDatesForm r={r} onDone={() => setEditingDates(false)} />}
+        {editable && r.isManual && !r.parentId && (
+          <Button size="sm" variant="ghost" className="text-destructive" disabled={saving} onClick={remove}>Delete block</Button>
+        )}
         {editable && r.parentId && (
           <div className="flex flex-wrap gap-2">
             <Button size="sm" disabled={saving} onClick={() => mark("booking")}><SourceMark source={r.source} className="h-4 w-4" />Mark as booking</Button>
@@ -174,6 +200,7 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
           {nights(r) > 1 && <Button variant="outline" size="sm" onClick={openSplit}>Split booking</Button>}
           {r.splitId && <Button variant="outline" size="sm" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
           <Button variant="ghost" size="sm" disabled={saving} onClick={() => mark("blocked")}>Mark as blocked</Button>
+          {r.isManual && !r.parentId && <Button variant="ghost" size="sm" className="text-destructive" disabled={saving} onClick={remove}>Delete</Button>}
         </div>
       )}
       {editable && splitting && (
