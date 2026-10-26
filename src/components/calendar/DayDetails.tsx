@@ -10,9 +10,6 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import type { Source } from "@/lib/calendar";
 import { ReservationEditForm } from "./ReservationEditForm";
-import { SplitDateField } from "./SplitDateField";
-import { shiftISO } from "@/lib/date-text";
-import { isValidSplitDate } from "@/lib/reservation-row";
 import { SourceMark } from "./SourceMark";
 import { StayDatesForm } from "./StayDatesForm";
 import { Pencil } from "lucide-react";
@@ -74,24 +71,7 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
   const [editing, setEditing] = useState(false);
   const [editingDates, setEditingDates] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [splitting, setSplitting] = useState(false);
-  const [splitDate, setSplitDate] = useState("");
-  const openSplit = () => {
-    // Default to the tapped day itself, so the owner rarely has to type a date.
-    setSplitDate(dayDate && dayDate > r.checkIn ? dayDate : "");
-    setSplitting(true);
-  };
   const qc = useQueryClient();
-  const addSplit = async () => {
-    if (!isValidSplitDate(r, splitDate)) { toast.error("Pick a date after check-in and before check-out."); return; }
-    setSaving(true);
-    const { error } = await supabase.from("reservation_splits").insert({ reservation_id: r.parentId ?? r.id, start_date: splitDate });
-    setSaving(false);
-    if (error) { toast.error("Couldn't split. Please try again."); return; }
-    setSplitting(false); setSplitDate("");
-    await qc.invalidateQueries({ queryKey: ["apartment"] });
-    toast.success("Booking split. Tap the new part to add its guests.");
-  };
   const joinBack = async () => {
     if (!r.splitId) return;
     setSaving(true);
@@ -197,20 +177,9 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
       {editable && (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>
-          {nights(r) > 1 && <Button variant="outline" size="sm" onClick={openSplit}>Split booking</Button>}
           {r.splitId && <Button variant="outline" size="sm" disabled={saving} onClick={joinBack}>Join back with previous guest</Button>}
           <Button variant="ghost" size="sm" disabled={saving} onClick={() => mark("blocked")}>Mark as blocked</Button>
           {r.isManual && !r.parentId && <Button variant="ghost" size="sm" className="text-destructive" disabled={saving} onClick={remove}>Delete</Button>}
-        </div>
-      )}
-      {editable && splitting && (
-        <div className="space-y-2 rounded-md border p-3">
-          <p className="text-sm text-muted-foreground">Date the next guest checks in (changeover day):</p>
-          <SplitDateField value={splitDate} onChange={setSplitDate} min={shiftISO(r.checkIn, 1)} max={shiftISO(r.checkOut, -1)} />
-          <div className="flex gap-2">
-            <Button size="sm" disabled={saving || !splitDate} onClick={addSplit}>Split here</Button>
-            <Button size="sm" variant="ghost" onClick={() => setSplitting(false)}>Cancel</Button>
-          </div>
         </div>
       )}
       </>}
