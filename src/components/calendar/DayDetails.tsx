@@ -39,6 +39,9 @@ export function DayDetails({ info, onClose, editable = false, apartmentId, allRe
       {editable && apartmentId && ["checkin", "checkout", "changeover", "staying"].includes(info.kind) && (
         <AddEntryForm key={`occ-${info.date}`} occupied date={info.date} apartmentId={apartmentId} reservations={allReservations} />
       )}
+      {editable && apartmentId && (info.kind === "blocked" || info.kind === "checkout-blocked") && (
+        <AddEntryForm key={`blk-${info.date}`} allowBlock={false} date={info.date} apartmentId={apartmentId} reservations={allReservations} />
+      )}
       {!editable && info.reservations.length === 0 && <p className="text-muted-foreground">Nothing on this day.</p>}
     </div>
   );

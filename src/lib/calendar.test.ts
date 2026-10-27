@@ -45,3 +45,14 @@ describe("owner-added booking inside a synced stay", () => {
   it("its middle days show the owner's guest", () => expect(dayInfo("2026-11-15", [synced, mine]).staying?.id).toBe("m"));
   it("after it ends the synced stay shows again", () => expect(dayInfo("2026-11-18", [synced, mine]).staying?.id).toBe("s"));
 });
+
+describe("manual booking on a blocked day", () => {
+  it("shows the owner's booking instead of the grey block", async () => {
+    const { dayInfo } = await import("./calendar");
+    const block = { id: "b", source: "airbnb" as const, checkIn: "2026-10-26", checkOut: "2026-10-31", status: "active" as const, isBlocked: true };
+    const mine = { id: "m", source: "booking" as const, checkIn: "2026-10-27", checkOut: "2026-10-29", status: "active" as const, isBlocked: false, isManual: true };
+    expect(dayInfo("2026-10-27", [block, mine]).kind).toBe("checkin");
+    expect(dayInfo("2026-10-28", [block, mine]).kind).toBe("staying");
+    expect(dayInfo("2026-10-26", [block, mine]).kind).toBe("blocked");
+  });
+});
