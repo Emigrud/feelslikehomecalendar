@@ -12,7 +12,7 @@ import { SourceMark } from "./SourceMark";
 type Kind = { source: Source; blocked: boolean };
 
 /** Owner adds a booking or block on an empty day; syncs never touch it (manual- uid). */
-export function AddEntryForm({ date, apartmentId, reservations, occupied = false }: { date: string; apartmentId: string; reservations: Reservation[]; occupied?: boolean }) {
+export function AddEntryForm({ date, apartmentId, reservations, occupied = false, allowBlock = true }: { date: string; apartmentId: string; reservations: Reservation[]; occupied?: boolean; allowBlock?: boolean }) {
   const qc = useQueryClient();
   const [kind, setKind] = useState<Kind | null>(null);
   const [picking, setPicking] = useState(false);
@@ -20,7 +20,7 @@ export function AddEntryForm({ date, apartmentId, reservations, occupied = false
   const [checkOut, setCheckOut] = useState(shiftISO(date, 1));
   const [saving, setSaving] = useState(false);
   const ok = !!checkIn && !!checkOut && checkIn < checkOut;
-  const overlap = !occupied && ok && reservations.some((r) => r.status === "active" && r.checkIn < checkOut && checkIn < r.checkOut);
+  const overlap = !occupied && ok && reservations.some((r) => r.status === "active" && (allowBlock || !r.isBlocked) && r.checkIn < checkOut && checkIn < r.checkOut);
 
   const save = async () => {
     if (!kind || !ok) return;
@@ -42,13 +42,13 @@ export function AddEntryForm({ date, apartmentId, reservations, occupied = false
   if (!kind) {
     return (
       <div className="space-y-2">
-        <p className="text-sm text-muted-foreground">{occupied ? "New booking from:" : "Nothing on this day yet. Add:"}</p>
+        <p className="text-sm text-muted-foreground">{occupied ? "New booking from:" : allowBlock ? "Nothing on this day yet. Add:" : "Add a booking:"}</p>
         <div className="flex flex-col gap-2">
           <Button variant="outline" onClick={() => setKind({ source: "airbnb", blocked: false })}><SourceMark source="airbnb" className="h-4 w-4" />{occupied ? "Airbnb" : "Add Airbnb booking"}</Button>
           <Button variant="outline" onClick={() => setKind({ source: "booking", blocked: false })}><SourceMark source="booking" className="h-4 w-4" />{occupied ? "Booking.com" : "Add Booking.com booking"}</Button>
           {occupied
             ? <Button variant="ghost" onClick={() => setPicking(false)}>Cancel</Button>
-            : <Button variant="outline" onClick={() => setKind({ source: "airbnb", blocked: true })}>Block dates</Button>}
+            : allowBlock && <Button variant="outline" onClick={() => setKind({ source: "airbnb", blocked: true })}>Block dates</Button>}
         </div>
       </div>
     );
