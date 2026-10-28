@@ -119,3 +119,8 @@ export function dayComment(r: Reservation, info: Pick<DayInfo, "checkIn" | "chec
   if (r === info.checkOut) return r.checkOutComment ?? null;
   return null;
 }
+
+/** True when any booking or block on this day has a comment that belongs to this day. */
+export function hasDayComment(info: DayInfo): boolean {
+  return info.reservations.some((r) => !!dayComment(r, info)?.trim());
+}
