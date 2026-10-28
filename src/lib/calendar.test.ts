@@ -1,4 +1,4 @@
-import { dayComment, describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { dayComment, dayInfo, guestLabel, monthGrid, nights, type Reservation } from "./calendar";
 
 const r = (o: Partial<Reservation>): Reservation => ({
