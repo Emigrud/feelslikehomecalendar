@@ -1,7 +1,7 @@
 import ICAL from "ical.js";
 import type { Source } from "./calendar";
 
-export const SYNC_SCHEDULE = "0 */2 * * *";
+export const SYNC_SCHEDULE = "*/30 * * * *";
 /** Closed stretches longer than this (e.g. months without prices) are hidden. */
 export const MAX_NIGHTS = 30;
 export type FeedEvent = { external_uid: string; check_in: string; check_out: string; is_blocked: boolean; status: "active" | "cancelled" };

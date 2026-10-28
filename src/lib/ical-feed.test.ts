@@ -3,7 +3,7 @@ import { parseFeed, validateFeedUrl, SYNC_SCHEDULE } from "./ical-feed";
 
 const feed = (summary = "Reserved", status = "") => `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:reservation-1\r\nDTSTART;VALUE=DATE:20261022\r\nDTEND;VALUE=DATE:20261025\r\nSUMMARY:${summary}\r\n${status}END:VEVENT\r\nEND:VCALENDAR`;
 describe("calendar imports", () => {
-  it("uses a two-hour schedule", () => expect(SYNC_SCHEDULE).toBe("0 */2 * * *"));
+  it("uses a 30-minute schedule", () => expect(SYNC_SCHEDULE).toBe("*/30 * * * *"));
   it("imports dates without guest fields", () => expect(parseFeed(feed(), "airbnb")).toEqual([{ external_uid: "reservation-1", check_in: "2026-10-22", check_out: "2026-10-25", is_blocked: false, status: "active" }]));
   it("Booking.com CLOSED entries import as reservations", () => expect(parseFeed(feed("CLOSED - Not available"), "booking")[0]?.is_blocked).toBe(false));
   it("hides closures longer than 30 nights", () => {
