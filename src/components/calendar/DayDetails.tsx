@@ -173,9 +173,7 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
         </dl>
       )}
       {missing && r.guestName && <p><span className="text-muted-foreground">Guest: </span><span className="font-semibold">{r.guestName}</span></p>}
-      {r.comment && (
-        <div className="rounded-md border-l-4 border-comment-border bg-comment px-3 py-2 font-medium text-comment-foreground">{r.comment}</div>
-      )}
+      {(role === "in" || role === "out") && <StayCommentEditor r={r} which={role} editable={editable} />}
       {editable && (
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit details</Button>
@@ -213,5 +211,48 @@ function BlockCommentForm({ r, onDone }: { r: Reservation; onDone: () => void })
         <Button size="sm" variant="ghost" onClick={onDone}>Cancel</Button>
       </div>
     </div>
+  );
+}
+
+function StayCommentEditor({ r, which, editable }: { r: Reservation; which: "in" | "out"; editable: boolean }) {
+  const qc = useQueryClient();
+  const current = (which === "in" ? r.checkInComment : r.checkOutComment) ?? null;
+  const label = which === "in" ? "check-in comment" : "check-out comment";
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(current ?? "");
+  const [saving, setSaving] = useState(false);
+  const write = async (value: string | null) => {
+    setSaving(true);
+    const fields = which === "in" ? { checkin_comment: value } : { checkout_comment: value };
+    const { error } = r.splitId
+      ? await supabase.from("reservation_splits").update(fields).eq("id", r.splitId)
+      : await supabase.from("reservations").update(fields).eq("id", r.parentId ?? r.id);
+    setSaving(false);
+    if (error) { toast.error("Couldn't save. Please try again."); return; }
+    await qc.invalidateQueries({ queryKey: ["apartment"] });
+    setEditing(false);
+  };
+  if (editing) {
+    return (
+      <div className="space-y-2">
+        <Label htmlFor={`sc-${which}-${r.id}`} className="capitalize">{label}</Label>
+        <Textarea id={`sc-${which}-${r.id}`} rows={3} value={text} onChange={(e) => setText(e.target.value)} />
+        <div className="flex gap-2">
+          <Button size="sm" disabled={saving} onClick={() => write(text.trim() || null)}>Save</Button>
+          <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>Cancel</Button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <>
+      {current && <div className="rounded-md border-l-4 border-comment-border bg-comment px-3 py-2 font-medium text-comment-foreground">{current}</div>}
+      {editable && (
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" variant="outline" onClick={() => { setText(current ?? ""); setEditing(true); }}>{current ? `Edit ${label}` : `Add ${label}`}</Button>
+          {current && <Button size="sm" variant="ghost" className="text-destructive" disabled={saving} onClick={() => window.confirm(`Delete the ${label}?`) && write(null)}>Delete {label}</Button>}
+        </div>
+      )}
+    </>
   );
 }

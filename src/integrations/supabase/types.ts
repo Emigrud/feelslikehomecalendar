@@ -53,6 +53,8 @@ export type Database = {
       reservation_splits: {
         Row: {
           adults: number | null
+          checkin_comment: string | null
+          checkout_comment: string | null
           comment: string | null
           created_at: string
           guest_name: string | null
@@ -64,6 +66,8 @@ export type Database = {
         }
         Insert: {
           adults?: number | null
+          checkin_comment?: string | null
+          checkout_comment?: string | null
           comment?: string | null
           created_at?: string
           guest_name?: string | null
@@ -75,6 +79,8 @@ export type Database = {
         }
         Update: {
           adults?: number | null
+          checkin_comment?: string | null
+          checkout_comment?: string | null
           comment?: string | null
           created_at?: string
           guest_name?: string | null
@@ -100,6 +106,8 @@ export type Database = {
           apartment_id: string
           check_in: string
           check_out: string
+          checkin_comment: string | null
+          checkout_comment: string | null
           comment: string | null
           created_at: string
           external_uid: string
@@ -121,6 +129,8 @@ export type Database = {
           apartment_id: string
           check_in: string
           check_out: string
+          checkin_comment?: string | null
+          checkout_comment?: string | null
           comment?: string | null
           created_at?: string
           external_uid: string
@@ -142,6 +152,8 @@ export type Database = {
           apartment_id?: string
           check_in?: string
           check_out?: string
+          checkin_comment?: string | null
+          checkout_comment?: string | null
           comment?: string | null
           created_at?: string
           external_uid?: string

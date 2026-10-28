@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { parseAdults, parseKidsAges } from "@/lib/guest-input";
 import type { Reservation } from "@/lib/calendar";
 
@@ -13,12 +12,11 @@ export function ReservationEditForm({ r, onDone }: { r: Reservation; onDone: () 
   const [adults, setAdults] = useState(r.adults == null ? "" : String(r.adults));
   const [kids, setKids] = useState((r.kidsAges ?? []).join(", "));
   const [name, setName] = useState(r.guestName ?? "");
-  const [comment, setComment] = useState(r.comment ?? "");
   const [error, setError] = useState<string | null>(null);
 
   const save = useMutation({
     mutationFn: async (v: { adults: number | null; kids: number[] }) => {
-      const fields = { adults: v.adults, kids_ages: v.kids, guest_name: name.trim() || null, comment: comment.trim() || null };
+      const fields = { adults: v.adults, kids_ages: v.kids, guest_name: name.trim() || null };
       const { error } = r.splitId
         ? await supabase.from("reservation_splits").update(fields).eq("id", r.splitId)
         : await supabase.from("reservations").update(fields).eq("id", r.parentId ?? r.id);
@@ -53,10 +51,6 @@ export function ReservationEditForm({ r, onDone }: { r: Reservation; onDone: () 
       <div className="space-y-1.5">
         <Label htmlFor={`n-${r.id}`}>Guest name</Label>
         <Input id={`n-${r.id}`} value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor={`c-${r.id}`}>Comment for cleaner</Label>
-        <Textarea id={`c-${r.id}`} rows={3} value={comment} onChange={(e) => setComment(e.target.value)} />
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="flex gap-2">
