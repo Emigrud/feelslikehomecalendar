@@ -58,7 +58,7 @@ function SettingsPage() {
       <Button type="submit" disabled={!dirty || save.isPending}><Save />{save.isPending ? "Saving…" : "Save settings"}</Button>
     </form>
     <section className="mt-8 space-y-4 border-t pt-6"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-display text-xl font-semibold">Sync status</h2><SyncButton disabled={dirty || save.isPending || (!apt.airbnb_ical_url && !apt.booking_ical_url)} /></div>
-      <dl className="space-y-2 text-sm"><div className="flex justify-between gap-4"><dt className="text-muted-foreground">Last successful sync</dt><dd className="text-right">{syncTime(apt.last_synced_at)}</dd></div><div className="flex justify-between gap-4"><dt className="text-muted-foreground">Automatic sync</dt><dd>Every 2 hours</dd></div></dl>
+      <dl className="space-y-2 text-sm"><div className="flex justify-between gap-4"><dt className="text-muted-foreground">Last successful sync</dt><dd className="text-right">{syncTime(apt.last_synced_at)}</dd></div><div className="flex justify-between gap-4"><dt className="text-muted-foreground">Automatic sync</dt><dd>Every 30 minutes</dd></div></dl>
       {apt.last_sync_error && <p role="alert" className="break-words text-sm text-destructive">{apt.last_sync_error}</p>}
     </section>
   </main>;
