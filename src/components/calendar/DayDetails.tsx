@@ -14,6 +14,8 @@ import { SourceMark } from "./SourceMark";
 import { StayDatesForm } from "./StayDatesForm";
 import { Pencil } from "lucide-react";
 import { AddEntryForm } from "./AddEntryForm";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
   info: DayInfo | null;
@@ -120,6 +122,12 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
           )}
         </div>
         {editingDates && <StayDatesForm r={r} onDone={() => setEditingDates(false)} />}
+        {r.comment && !editing && (
+          <div className="rounded-md border-l-4 border-comment-border bg-comment px-3 py-2 font-medium text-comment-foreground">{r.comment}</div>
+        )}
+        {editable && (editing
+          ? <BlockCommentForm r={r} onDone={() => setEditing(false)} />
+          : <Button size="sm" variant="outline" onClick={() => setEditing(true)}>{r.comment ? "Edit comment" : "Add comment"}</Button>)}
         {editable && r.isManual && !r.parentId && (
           <Button size="sm" variant="ghost" className="text-destructive" disabled={saving} onClick={remove}>Delete block</Button>
         )}
@@ -177,6 +185,33 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
         </div>
       )}
       </>}
+    </div>
+  );
+}
+
+function BlockCommentForm({ r, onDone }: { r: Reservation; onDone: () => void }) {
+  const qc = useQueryClient();
+  const [text, setText] = useState(r.comment ?? "");
+  const [saving, setSaving] = useState(false);
+  const save = async () => {
+    setSaving(true);
+    const fields = { comment: text.trim() || null };
+    const { error } = r.splitId
+      ? await supabase.from("reservation_splits").update(fields).eq("id", r.splitId)
+      : await supabase.from("reservations").update(fields).eq("id", r.parentId ?? r.id);
+    setSaving(false);
+    if (error) { toast.error("Couldn't save. Please try again."); return; }
+    await qc.invalidateQueries({ queryKey: ["apartment"] });
+    onDone();
+  };
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={`bc-${r.id}`}>Comment</Label>
+      <Textarea id={`bc-${r.id}`} rows={3} value={text} onChange={(e) => setText(e.target.value)} />
+      <div className="flex gap-2">
+        <Button size="sm" disabled={saving} onClick={save}>Save</Button>
+        <Button size="sm" variant="ghost" onClick={onDone}>Cancel</Button>
+      </div>
     </div>
   );
 }
