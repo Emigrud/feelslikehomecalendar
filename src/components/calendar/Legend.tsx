@@ -1,4 +1,5 @@
 import { SourceMark } from "./SourceMark";
+import { CommentMark } from "./CommentMark";
 
 const ITEMS = [
   { cls: "day-checkin", label: "Check-in" },
@@ -23,6 +24,7 @@ export function Legend() {
       <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
         <span className="flex items-center gap-1.5"><SourceMark source="airbnb" className="h-3.5 w-3.5" /> Airbnb</span>
         <span className="flex items-center gap-1.5"><SourceMark source="booking" className="h-3.5 w-3.5" /> Booking.com</span>
+        <span className="flex items-center gap-1.5"><CommentMark /> Comment added</span>
         <span>"2+1" = adults + kids</span>
         <span>"?" = guest numbers not filled in</span>
       </p>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { dayComment, dayInfo, guestLabel, monthGrid, nights, type Reservation } from "./calendar";
+import { hasDayComment, dayComment, dayInfo, guestLabel, monthGrid, nights, type Reservation } from "./calendar";
 
 const r = (o: Partial<Reservation>): Reservation => ({
   id: Math.random().toString(), source: "airbnb", checkIn: "2026-10-10", checkOut: "2026-10-13",
@@ -69,5 +69,18 @@ describe("separate check-in / check-out comments", () => {
   it("check-out comment shows on the check-out day only", () => {
     expect(dayComment(b, dayInfo("2026-11-12", [b]))).toBeNull();
     expect(dayComment(b, dayInfo("2026-11-14", [b]))).toBe("OUT note");
+  });
+});
+
+describe("comment sign", () => {
+  const a = { id: "a", source: "airbnb" as const, checkIn: "2026-11-10", checkOut: "2026-11-12", status: "active" as const, isBlocked: false, checkInComment: "IN" };
+  const b = { id: "b", source: "airbnb" as const, checkIn: "2026-11-10", checkOut: "2026-11-12", status: "active" as const, isBlocked: false, checkOutComment: "OUT" };
+  it("check-in comment marks only the check-in day", () => {
+    expect(hasDayComment(dayInfo("2026-11-10", [a]))).toBe(true);
+    expect(hasDayComment(dayInfo("2026-11-12", [a]))).toBe(false);
+  });
+  it("check-out comment marks only the check-out day", () => {
+    expect(hasDayComment(dayInfo("2026-11-10", [b]))).toBe(false);
+    expect(hasDayComment(dayInfo("2026-11-12", [b]))).toBe(true);
   });
 });

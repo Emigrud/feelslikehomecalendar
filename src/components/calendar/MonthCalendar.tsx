@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { dayInfo, guestLabel, monthGrid, toKey, type DayInfo, type Reservation } from "@/lib/calendar";
+import { hasDayComment, dayInfo, guestLabel, monthGrid, toKey, type DayInfo, type Reservation } from "@/lib/calendar";
 import { SourceMark } from "./SourceMark";
+import { CommentMark } from "./CommentMark";
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { DayHoverSummary } from "./DayHoverSummary";
@@ -66,6 +67,7 @@ export function MonthCalendar({ year, month, reservations, onChangeMonth, onSele
             >
               <span className="relative z-10 text-sm font-bold leading-none sm:text-base">{date.getDate()}</span>
               <CellBadges info={info} />
+              {hasDayComment(info) && <CommentMark className="absolute right-1 top-1 z-10" />}
             </button>
           );
           if (!HOVER_KINDS.includes(info.kind) || info.reservations.length === 0) return cell;
