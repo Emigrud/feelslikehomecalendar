@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SourceMark } from "@/components/calendar/SourceMark";
 import { SyncButton } from "@/components/calendar/SyncButton";
+import { CleanerLinkSection } from "@/components/calendar/CleanerLinkSection";
 import { calendarSettingsQuery, syncTime } from "@/lib/calendar-settings";
 import { saveCalendarSettings } from "@/lib/calendar-settings.functions";
 
@@ -61,5 +62,6 @@ function SettingsPage() {
       <dl className="space-y-2 text-sm"><div className="flex justify-between gap-4"><dt className="text-muted-foreground">Last successful sync</dt><dd className="text-right">{syncTime(apt.last_synced_at)}</dd></div><div className="flex justify-between gap-4"><dt className="text-muted-foreground">Automatic sync</dt><dd>Every 30 minutes</dd></div></dl>
       {apt.last_sync_error && <p role="alert" className="break-words text-sm text-destructive">{apt.last_sync_error}</p>}
     </section>
+    <CleanerLinkSection />
   </main>;
 }

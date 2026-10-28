@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as CTokenRouteImport } from './routes/c.$token'
 import { Route as ApiPublicJobsCalendarSyncRouteImport } from './routes/api/public/jobs/calendar-sync'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -40,6 +41,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const CTokenRoute = CTokenRouteImport.update({
+  id: '/c/$token',
+  path: '/c/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJobsCalendarSyncRoute =
   ApiPublicJobsCalendarSyncRouteImport.update({
     id: '/api/public/jobs/calendar-sync',
@@ -52,12 +58,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/c/$token': typeof CTokenRoute
   '/api/public/jobs/calendar-sync': typeof ApiPublicJobsCalendarSyncRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/c/$token': typeof CTokenRoute
   '/': typeof AuthenticatedIndexRoute
   '/api/public/jobs/calendar-sync': typeof ApiPublicJobsCalendarSyncRoute
 }
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/c/$token': typeof CTokenRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/api/public/jobs/calendar-sync': typeof ApiPublicJobsCalendarSyncRoute
 }
@@ -77,12 +86,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/settings'
+    | '/c/$token'
     | '/api/public/jobs/calendar-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
     | '/reset-password'
     | '/settings'
+    | '/c/$token'
     | '/'
     | '/api/public/jobs/calendar-sync'
   id:
@@ -91,6 +102,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/settings'
+    | '/c/$token'
     | '/_authenticated/'
     | '/api/public/jobs/calendar-sync'
   fileRoutesById: FileRoutesById
@@ -99,6 +111,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  CTokenRoute: typeof CTokenRoute
   ApiPublicJobsCalendarSyncRoute: typeof ApiPublicJobsCalendarSyncRoute
 }
 
@@ -139,6 +152,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/c/$token': {
+      id: '/c/$token'
+      path: '/c/$token'
+      fullPath: '/c/$token'
+      preLoaderRoute: typeof CTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jobs/calendar-sync': {
       id: '/api/public/jobs/calendar-sync'
       path: '/api/public/jobs/calendar-sync'
@@ -166,6 +186,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  CTokenRoute: CTokenRoute,
   ApiPublicJobsCalendarSyncRoute: ApiPublicJobsCalendarSyncRoute,
 }
 export const routeTree = rootRouteImport

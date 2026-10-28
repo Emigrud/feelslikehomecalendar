@@ -19,3 +19,4 @@
 - Owner splits of merged stays live in their own table and expand into calendar parts at load time, each part separately blockable; a database trigger clears them when a stay's synced dates change; why: Booking.com merges back-to-back bookings and stale split dates must never show.
 - Owner-edited stay dates live in owner_check_in/owner_check_out on reservations and override synced dates at load time (stayDates); why: syncs never undo the owner's length-of-stay changes.
 - Owner-added entries use external_uid 'manual-<uuid>' and only Airbnb/Booking sources; apply_calendar_feed never updates or cancels them; why: hand-made bookings and blocks must survive every sync.
+- The cleaner view is the public /c/$token route backed by a public server function that looks up apartments.cleaner_token with the admin client and returns only the name and reservations; why: no-login, read-only access without exposing feed links.
