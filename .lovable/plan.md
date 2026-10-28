@@ -2,7 +2,7 @@
 
 ## What changes
 - When you tap a grey day, the block's card gets an **Add comment** button. If the block already has a comment, the button says **Edit comment**.
-- Tapping it opens a box called "Comment for cleaner" with **Save** and **Cancel**.
+- Tapping it opens a box called "Comment" with **Save** and **Cancel**.
 - Once saved, the comment shows in the same yellow box used on bookings. The cleaner will see it too once her link page is built (stage 5).
 - Grey days that have a comment get the same comment sign in the calendar that bookings get.
 
