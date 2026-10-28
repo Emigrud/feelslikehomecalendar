@@ -4,7 +4,12 @@ import { cn } from "@/lib/utils";
 import { dayInfo, guestLabel, monthGrid, toKey, type DayInfo, type Reservation } from "@/lib/calendar";
 import { SourceMark } from "./SourceMark";
 
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { DayHoverSummary } from "./DayHoverSummary";
+import type { DayKind } from "@/lib/calendar";
+
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const HOVER_KINDS: DayKind[] = ["checkin", "checkout", "changeover", "checkout-blocked", "blocked"];
 
 interface Props {
   year: number;
@@ -44,7 +49,7 @@ export function MonthCalendar({ year, month, reservations, onChangeMonth, onSele
           const info = dayInfo(key, reservations);
           const inMonth = date.getMonth() === month;
           const tappable = true;
-          return (
+          const cell = (
             <button
               key={key}
               type="button"
@@ -62,6 +67,13 @@ export function MonthCalendar({ year, month, reservations, onChangeMonth, onSele
               <span className="relative z-10 text-sm font-bold leading-none sm:text-base">{date.getDate()}</span>
               <CellBadges info={info} />
             </button>
+          );
+          if (!HOVER_KINDS.includes(info.kind) || info.reservations.length === 0) return cell;
+          return (
+            <HoverCard key={key} openDelay={150} closeDelay={100}>
+              <HoverCardTrigger asChild>{cell}</HoverCardTrigger>
+              <HoverCardContent className="w-64 p-3"><DayHoverSummary info={info} /></HoverCardContent>
+            </HoverCard>
           );
         })}
       </div>
