@@ -1,4 +1,4 @@
-import { formatShort, nights, sourceName, type DayInfo } from "@/lib/calendar";
+import { dayComment, formatShort, nights, sourceName, type DayInfo } from "@/lib/calendar";
 import { SourceMark } from "./SourceMark";
 
 export function DayHoverSummary({ info }: { info: DayInfo }) {
@@ -7,6 +7,7 @@ export function DayHoverSummary({ info }: { info: DayInfo }) {
       {info.reservations.map((r) => {
         const n = nights(r);
         const kids = r.kidsAges ?? [];
+        const comment = dayComment(r, info);
         return (
           <div key={r.id} className="space-y-1">
             <p className="flex items-center gap-1.5 font-semibold">
@@ -17,7 +18,7 @@ export function DayHoverSummary({ info }: { info: DayInfo }) {
               ? <p className="font-medium text-warning-foreground">Guest numbers not filled in yet</p>
               : <p>{r.adults} {r.adults === 1 ? "adult" : "adults"}{kids.length > 0 && `, ${kids.length} ${kids.length === 1 ? "kid" : "kids"} (${kids.join(", ")})`}</p>)}
             {!r.isBlocked && r.guestName && <p>{r.guestName}</p>}
-            {r.comment && <div className="rounded-md border-l-4 border-comment-border bg-comment px-2 py-1 text-comment-foreground">{r.comment}</div>}
+            {comment && <div className="rounded-md border-l-4 border-comment-border bg-comment px-2 py-1 text-comment-foreground">{comment}</div>}
           </div>
         );
       })}

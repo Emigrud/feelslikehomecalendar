@@ -52,7 +52,6 @@ export function ReservationEditForm({ r, onDone }: { r: Reservation; onDone: () 
         <Label htmlFor={`n-${r.id}`}>Guest name</Label>
         <Input id={`n-${r.id}`} value={name} onChange={(e) => setName(e.target.value)} />
       </div>
-      <div className="space-y-1.5">
       {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="flex gap-2">
         <Button type="submit" disabled={save.isPending}>{save.isPending ? "Saving…" : "Save"}</Button>
