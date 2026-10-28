@@ -1,4 +1,3 @@
-export const PUBLISHED_ORIGIN: string | null = null;
 
 /** Link codes are 36 lowercase hex characters (18 random bytes). */
 export function isCleanerToken(t: string): boolean {
