@@ -120,6 +120,12 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
           )}
         </div>
         {editingDates && <StayDatesForm r={r} onDone={() => setEditingDates(false)} />}
+        {r.comment && !editing && (
+          <div className="rounded-md border-l-4 border-comment-border bg-comment px-3 py-2 font-medium text-comment-foreground">{r.comment}</div>
+        )}
+        {editable && (editing
+          ? <BlockCommentForm r={r} onDone={() => setEditing(false)} />
+          : <Button size="sm" variant="outline" onClick={() => setEditing(true)}>{r.comment ? "Edit comment" : "Add comment"}</Button>)}
         {editable && r.isManual && !r.parentId && (
           <Button size="sm" variant="ghost" className="text-destructive" disabled={saving} onClick={remove}>Delete block</Button>
         )}
