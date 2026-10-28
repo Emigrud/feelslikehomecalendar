@@ -50,6 +50,13 @@
       "when": 1793037649776,
       "tag": "0006_keep_manual_entries_on_sync",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793179886391,
+      "tag": "0007_separate_stay_comments",
+      "breakpoints": true
     }
   ]
 }
