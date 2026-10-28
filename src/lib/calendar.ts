@@ -8,7 +8,9 @@ export interface Reservation {
   guestName?: string | null;
   adults?: number | null; // null = not filled in yet
   kidsAges?: number[] | null;
-  comment?: string | null;
+  comment?: string | null; // blocks only
+  checkInComment?: string | null;
+  checkOutComment?: string | null;
   status: "active" | "cancelled";
   isBlocked: boolean;
   /** Owner's manual choice; survives calendar syncs. */
@@ -108,4 +110,12 @@ export const sourceName = (s: Source) => (s === "airbnb" ? "Airbnb" : "Booking.c
 
 export function formatShort(key: string): string {
   return fromKey(key).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+}
+
+/** The comment that belongs to this booking on this day: check-in day → check-in comment, check-out day → check-out comment, blocks → their own comment. */
+export function dayComment(r: Reservation, info: Pick<DayInfo, "checkIn" | "checkOut">): string | null {
+  if (r.isBlocked) return r.comment ?? null;
+  if (r === info.checkIn) return r.checkInComment ?? null;
+  if (r === info.checkOut) return r.checkOutComment ?? null;
+  return null;
 }

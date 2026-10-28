@@ -18,12 +18,12 @@ async function loadApartment() {
 
   const res = await supabase
     .from("reservations")
-    .select("id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out")
+    .select("id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out")
     .eq("apartment_id", apt.id)
     .order("check_in");
   if (res.error) throw res.error;
 
-  const sp = await supabase.from("reservation_splits").select("id, reservation_id, start_date, guest_name, adults, kids_ages, comment, is_blocked");
+  const sp = await supabase.from("reservation_splits").select("id, reservation_id, start_date, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, is_blocked");
   if (sp.error) throw sp.error;
 
   return { id: apt.id, name: apt.name, reservations: (res.data ?? []).flatMap((r) => expandSplits(rowToReservation(r), sp.data ?? [])) };

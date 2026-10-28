@@ -9,6 +9,8 @@ export interface ReservationRow {
   adults: number | null;
   kids_ages: number[] | null;
   comment: string | null;
+  checkin_comment?: string | null;
+  checkout_comment?: string | null;
   status: string;
   is_blocked: boolean;
   owner_kind?: string | null;
@@ -36,6 +38,8 @@ export function rowToReservation(r: ReservationRow): Reservation {
     adults: r.adults,
     kidsAges: r.kids_ages ?? [],
     comment: r.comment,
+    checkInComment: r.checkin_comment ?? null,
+    checkOutComment: r.checkout_comment ?? null,
     status: r.status === "cancelled" ? "cancelled" : "active",
     isBlocked: r.owner_kind === "booking" ? false : r.owner_kind === "blocked" ? true : r.is_blocked,
     ownerKind: r.owner_kind === "booking" || r.owner_kind === "blocked" ? r.owner_kind : null,
@@ -52,6 +56,8 @@ export interface SplitRow {
   adults: number | null;
   kids_ages: number[] | null;
   comment: string | null;
+  checkin_comment?: string | null;
+  checkout_comment?: string | null;
   is_blocked?: boolean | null;
 }
 
@@ -67,6 +73,7 @@ export function expandSplits(r: Reservation, splits: SplitRow[]): Reservation[] 
     ...r, id: `${r.id}#${s.start_date}`, parentId: r.id, splitId: s.id,
     checkIn: s.start_date, checkOut: ends[i + 1]!,
     guestName: s.guest_name, adults: s.adults, kidsAges: s.kids_ages ?? [], comment: s.comment,
+    checkInComment: s.checkin_comment ?? null, checkOutComment: s.checkout_comment ?? null,
     isBlocked: !!s.is_blocked,
   }));
   return parts;
