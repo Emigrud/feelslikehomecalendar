@@ -25,9 +25,8 @@ export function Legend() {
         <span className="flex items-center gap-1.5"><SourceMark source="airbnb" className="h-3.5 w-3.5" /> Airbnb</span>
         <span className="flex items-center gap-1.5"><SourceMark source="booking" className="h-3.5 w-3.5" /> Booking.com</span>
         <span className="flex items-center gap-1.5"><CommentMark /> Comment added</span>
-        <span>"2+1" = adults + kids</span>
-        <span>"?" = guest numbers not filled in</span>
       </p>
+      <p className="text-muted-foreground">"2+1" = adults + kids, "?" = guest numbers not filled in</p>
     </div>
   );
 }
