@@ -26,7 +26,7 @@ export interface Reservation {
   /** Added by hand by the owner; syncs never touch it and it can be deleted. */
   isManual?: boolean;
   /** Owner-entered preparation and times; separate for each split part. */
-  prep: Preparation;
+  prep?: Preparation;
 }
 
 export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "checkout-blocked" | "staying" | "blocked";

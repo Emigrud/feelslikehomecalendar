@@ -16,6 +16,8 @@ import { Pencil } from "lucide-react";
 import { AddEntryForm } from "./AddEntryForm";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { PrepSection } from "./PrepSection";
+import type { ApartmentTimes } from "@/lib/preparation";
 
 interface Props {
   info: DayInfo | null;
@@ -24,16 +26,17 @@ interface Props {
   editable?: boolean;
   apartmentId?: string;
   allReservations?: Reservation[];
+  times?: ApartmentTimes;
 }
 
-export function DayDetails({ info, onClose, editable = false, apartmentId, allReservations = [] }: Props) {
+export function DayDetails({ info, onClose, editable = false, apartmentId, allReservations = [], times }: Props) {
   const isMobile = useIsMobile();
   const open = !!info;
   const title = info ? formatShort(info.date) : "";
   const body = info && (
     <div className="space-y-4 px-4 pb-6 sm:px-0 sm:pb-0">
       {info.reservations.map((r) => (
-        <ReservationCard key={r.id} r={r} dayDate={info.date} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} />
+        <ReservationCard key={r.id} r={r} dayDate={info.date} role={r.isBlocked ? "blocked" : r === info.checkOut ? "out" : r === info.checkIn ? "in" : "stay"} editable={editable} times={times} />
       ))}
       {editable && apartmentId && info.reservations.length === 0 && (
         <AddEntryForm key={info.date} date={info.date} apartmentId={apartmentId} reservations={allReservations} />
@@ -75,7 +78,7 @@ const ROLE = {
   blocked: { label: "Blocked", cls: "bg-blocked text-blocked-foreground" },
 };
 
-function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDate?: string; role: keyof typeof ROLE; editable: boolean }) {
+function ReservationCard({ r, dayDate, role, editable, times }: { r: Reservation; dayDate?: string; role: keyof typeof ROLE; editable: boolean; times?: ApartmentTimes }) {
   const [editing, setEditing] = useState(false);
   const [editingDates, setEditingDates] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -173,6 +176,7 @@ function ReservationCard({ r, dayDate, role, editable }: { r: Reservation; dayDa
         </dl>
       )}
       {missing && r.guestName && <p><span className="text-muted-foreground">Guest: </span><span className="font-semibold">{r.guestName}</span></p>}
+      {(role === "in" || role === "out") && times && <PrepSection r={r} role={role} times={times} editable={editable} />}
       {(role === "in" || role === "out") && <StayCommentEditor r={r} which={role} editable={editable} />}
       {editable && (
         <div className="flex flex-wrap gap-2">
