@@ -3,8 +3,8 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { expandSplits, rowToReservation } from "./reservation-row";
 import { isCleanerToken } from "./cleaner-link";
 
-const RES_COLS = "id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out";
-const SPLIT_COLS = "id, reservation_id, start_date, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, is_blocked";
+const RES_COLS = "id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out, cleaning_date, cleaning_time";
+const SPLIT_COLS = "id, reservation_id, start_date, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, is_blocked, cleaning_date, cleaning_time";
 
 /** Public, read-only: the private link code is the only key. Never returns feed links or the code. */
 export const getCleanerCalendar = createServerFn({ method: "GET" })

@@ -10,6 +10,8 @@ import { apartmentQuery } from "@/lib/apartment-data";
 import { dayInfo } from "@/lib/calendar";
 import { Settings } from "lucide-react";
 import { SyncButton } from "@/components/calendar/SyncButton";
+import { CleaningsList } from "@/components/calendar/CleaningsList";
+import { ViewToggle, useSavedView } from "@/components/calendar/ViewToggle";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -44,6 +46,7 @@ function Index() {
   const now = new Date();
   const [ym, setYm] = useState({ y: now.getFullYear(), m: now.getMonth() });
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [view, setView] = useSavedView();
   const selected = selectedDate ? dayInfo(selectedDate, apt.reservations) : null;
 
 
@@ -72,6 +75,8 @@ function Index() {
           No bookings yet. Add your calendar links in Settings, then tap Sync now.
         </div>
       )}
+      <ViewToggle view={view} onChange={setView} />
+      {view === "cleanings" ? <CleaningsList reservations={apt.reservations} editable /> : <>
       <MonthCalendar
         year={ym.y}
         month={ym.m}
@@ -80,6 +85,7 @@ function Index() {
         onSelectDay={(d) => setSelectedDate(d.date)}
       />
       <Legend />
+      </>}
       <DayDetails info={selected} onClose={() => setSelectedDate(null)} editable apartmentId={apt.id} allReservations={apt.reservations} />
     </main>
   );

@@ -70,6 +70,8 @@ export type Database = {
           checkin_time: string | null
           checkout_comment: string | null
           checkout_time: string | null
+          cleaning_date: string | null
+          cleaning_time: string | null
           comment: string | null
           created_at: string
           guest_name: string | null
@@ -91,6 +93,8 @@ export type Database = {
           checkin_time?: string | null
           checkout_comment?: string | null
           checkout_time?: string | null
+          cleaning_date?: string | null
+          cleaning_time?: string | null
           comment?: string | null
           created_at?: string
           guest_name?: string | null
@@ -112,6 +116,8 @@ export type Database = {
           checkin_time?: string | null
           checkout_comment?: string | null
           checkout_time?: string | null
+          cleaning_date?: string | null
+          cleaning_time?: string | null
           comment?: string | null
           created_at?: string
           guest_name?: string | null
@@ -147,6 +153,8 @@ export type Database = {
           checkin_time: string | null
           checkout_comment: string | null
           checkout_time: string | null
+          cleaning_date: string | null
+          cleaning_time: string | null
           comment: string | null
           created_at: string
           external_uid: string
@@ -178,6 +186,8 @@ export type Database = {
           checkin_time?: string | null
           checkout_comment?: string | null
           checkout_time?: string | null
+          cleaning_date?: string | null
+          cleaning_time?: string | null
           comment?: string | null
           created_at?: string
           external_uid: string
@@ -209,6 +219,8 @@ export type Database = {
           checkin_time?: string | null
           checkout_comment?: string | null
           checkout_time?: string | null
+          cleaning_date?: string | null
+          cleaning_time?: string | null
           comment?: string | null
           created_at?: string
           external_uid?: string

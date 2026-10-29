@@ -19,6 +19,8 @@ export interface ReservationRow {
   owner_check_in?: string | null;
   owner_check_out?: string | null;
   external_uid?: string | null;
+  cleaning_date?: string | null;
+  cleaning_time?: string | null;
 }
 
 /** Owner-adjusted dates win over the platform's; a broken pair falls back to the platform dates. */
@@ -45,6 +47,8 @@ export function rowToReservation(r: ReservationRow): Reservation {
     ownerKind: r.owner_kind === "booking" || r.owner_kind === "blocked" ? r.owner_kind : null,
     firstPartBlocked: r.first_part_blocked ?? null,
     isManual: !!r.external_uid?.startsWith("manual-"),
+    cleaningDate: r.cleaning_date ?? null,
+    cleaningTime: r.cleaning_time ?? null,
   };
 }
 
@@ -59,6 +63,8 @@ export interface SplitRow {
   checkin_comment?: string | null;
   checkout_comment?: string | null;
   is_blocked?: boolean | null;
+  cleaning_date?: string | null;
+  cleaning_time?: string | null;
 }
 
 /** Turn one stay into consecutive parts at the owner's changeover dates; each part can be greyed out on its own. */
@@ -74,7 +80,7 @@ export function expandSplits(r: Reservation, splits: SplitRow[]): Reservation[] 
     checkIn: s.start_date, checkOut: ends[i + 1]!,
     guestName: s.guest_name, adults: s.adults, kidsAges: s.kids_ages ?? [], comment: s.comment,
     checkInComment: s.checkin_comment ?? null, checkOutComment: s.checkout_comment ?? null,
-    isBlocked: !!s.is_blocked,
+    isBlocked: !!s.is_blocked, cleaningDate: s.cleaning_date ?? null, cleaningTime: s.cleaning_time ?? null,
   }));
   return parts;
 }
