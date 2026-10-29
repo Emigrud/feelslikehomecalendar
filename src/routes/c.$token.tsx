@@ -6,6 +6,8 @@ import { DayDetails } from "@/components/calendar/DayDetails";
 import { Legend } from "@/components/calendar/Legend";
 import { getCleanerCalendar } from "@/lib/cleaner.functions";
 import { dayInfo } from "@/lib/calendar";
+import { CleaningsList } from "@/components/calendar/CleaningsList";
+import { ViewToggle, useSavedView } from "@/components/calendar/ViewToggle";
 
 const cleanerQuery = (token: string) => queryOptions({
   queryKey: ["cleaner", token],
@@ -37,6 +39,7 @@ function CleanerPage() {
   const now = new Date();
   const [ym, setYm] = useState({ y: now.getFullYear(), m: now.getMonth() });
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [view, setView] = useSavedView();
 
   if (isLoading) return <p className="p-6 text-center text-sm text-muted-foreground">Loading…</p>;
   if (error || !data) return <p className="mx-auto max-w-sm p-6 text-center text-sm text-muted-foreground">{error instanceof Error ? error.message : "Could not load the calendar."}</p>;
@@ -48,8 +51,11 @@ function CleanerPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Cleaning schedule</p>
         <h1 className="break-words font-display text-3xl font-bold">{data.name}</h1>
       </header>
+      <ViewToggle view={view} onChange={setView} />
+      {view === "cleanings" ? <CleaningsList reservations={data.reservations} /> : <>
       <MonthCalendar year={ym.y} month={ym.m} reservations={data.reservations} onChangeMonth={(y, m) => setYm({ y, m })} onSelectDay={(d) => setSelectedDate(d.date)} />
       <Legend />
+      </>}
       <DayDetails info={selected} onClose={() => setSelectedDate(null)} />
     </main>
   );

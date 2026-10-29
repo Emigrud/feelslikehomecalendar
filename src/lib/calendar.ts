@@ -23,6 +23,9 @@ export interface Reservation {
   firstPartBlocked?: boolean | null;
   /** Added by hand by the owner; syncs never touch it and it can be deleted. */
   isManual?: boolean;
+  /** Owner's planned cleaning after this stay's departure. */
+  cleaningDate?: string | null;
+  cleaningTime?: string | null;
 }
 
 export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "checkout-blocked" | "staying" | "blocked";
