@@ -57,6 +57,13 @@
       "when": 1793179886391,
       "tag": "0007_separate_stay_comments",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793266486953,
+      "tag": "0008_preparation_details",
+      "breakpoints": true
     }
   ]
 }

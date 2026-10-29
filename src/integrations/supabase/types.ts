@@ -17,6 +17,7 @@ export type Database = {
       apartments: {
         Row: {
           airbnb_ical_url: string | null
+          bed_options: string[]
           booking_ical_url: string | null
           cleaner_token: string
           created_at: string
@@ -25,9 +26,13 @@ export type Database = {
           last_synced_at: string | null
           name: string
           owner_id: string
+          std_checkin_time: string | null
+          std_checkout_time: string | null
+          timezone: string
         }
         Insert: {
           airbnb_ical_url?: string | null
+          bed_options?: string[]
           booking_ical_url?: string | null
           cleaner_token?: string
           created_at?: string
@@ -36,9 +41,13 @@ export type Database = {
           last_synced_at?: string | null
           name?: string
           owner_id: string
+          std_checkin_time?: string | null
+          std_checkout_time?: string | null
+          timezone?: string
         }
         Update: {
           airbnb_ical_url?: string | null
+          bed_options?: string[]
           booking_ical_url?: string | null
           cleaner_token?: string
           created_at?: string
@@ -47,46 +56,73 @@ export type Database = {
           last_synced_at?: string | null
           name?: string
           owner_id?: string
+          std_checkin_time?: string | null
+          std_checkout_time?: string | null
+          timezone?: string
         }
         Relationships: []
       }
       reservation_splits: {
         Row: {
           adults: number | null
+          arrival_time: string | null
           checkin_comment: string | null
+          checkin_time: string | null
           checkout_comment: string | null
+          checkout_time: string | null
           comment: string | null
           created_at: string
           guest_name: string | null
           id: string
           is_blocked: boolean | null
           kids_ages: number[]
+          prep_bed_note: string | null
+          prep_beds: string[]
+          prep_cot: string
+          prep_status: string
+          prep_towels: number | null
           reservation_id: string
           start_date: string
         }
         Insert: {
           adults?: number | null
+          arrival_time?: string | null
           checkin_comment?: string | null
+          checkin_time?: string | null
           checkout_comment?: string | null
+          checkout_time?: string | null
           comment?: string | null
           created_at?: string
           guest_name?: string | null
           id?: string
           is_blocked?: boolean | null
           kids_ages?: number[]
+          prep_bed_note?: string | null
+          prep_beds?: string[]
+          prep_cot?: string
+          prep_status?: string
+          prep_towels?: number | null
           reservation_id: string
           start_date: string
         }
         Update: {
           adults?: number | null
+          arrival_time?: string | null
           checkin_comment?: string | null
+          checkin_time?: string | null
           checkout_comment?: string | null
+          checkout_time?: string | null
           comment?: string | null
           created_at?: string
           guest_name?: string | null
           id?: string
           is_blocked?: boolean | null
           kids_ages?: number[]
+          prep_bed_note?: string | null
+          prep_beds?: string[]
+          prep_cot?: string
+          prep_status?: string
+          prep_towels?: number | null
           reservation_id?: string
           start_date?: string
         }
@@ -104,10 +140,13 @@ export type Database = {
         Row: {
           adults: number | null
           apartment_id: string
+          arrival_time: string | null
           check_in: string
           check_out: string
           checkin_comment: string | null
+          checkin_time: string | null
           checkout_comment: string | null
+          checkout_time: string | null
           comment: string | null
           created_at: string
           external_uid: string
@@ -120,6 +159,11 @@ export type Database = {
           owner_check_out: string | null
           owner_kind: string | null
           owner_source: string | null
+          prep_bed_note: string | null
+          prep_beds: string[]
+          prep_cot: string
+          prep_status: string
+          prep_towels: number | null
           source: string
           status: string
           updated_at: string
@@ -127,10 +171,13 @@ export type Database = {
         Insert: {
           adults?: number | null
           apartment_id: string
+          arrival_time?: string | null
           check_in: string
           check_out: string
           checkin_comment?: string | null
+          checkin_time?: string | null
           checkout_comment?: string | null
+          checkout_time?: string | null
           comment?: string | null
           created_at?: string
           external_uid: string
@@ -143,6 +190,11 @@ export type Database = {
           owner_check_out?: string | null
           owner_kind?: string | null
           owner_source?: string | null
+          prep_bed_note?: string | null
+          prep_beds?: string[]
+          prep_cot?: string
+          prep_status?: string
+          prep_towels?: number | null
           source: string
           status?: string
           updated_at?: string
@@ -150,10 +202,13 @@ export type Database = {
         Update: {
           adults?: number | null
           apartment_id?: string
+          arrival_time?: string | null
           check_in?: string
           check_out?: string
           checkin_comment?: string | null
+          checkin_time?: string | null
           checkout_comment?: string | null
+          checkout_time?: string | null
           comment?: string | null
           created_at?: string
           external_uid?: string
@@ -166,6 +221,11 @@ export type Database = {
           owner_check_out?: string | null
           owner_kind?: string | null
           owner_source?: string | null
+          prep_bed_note?: string | null
+          prep_beds?: string[]
+          prep_cot?: string
+          prep_status?: string
+          prep_towels?: number | null
           source?: string
           status?: string
           updated_at?: string
