@@ -78,7 +78,7 @@ const ROLE = {
   blocked: { label: "Blocked", cls: "bg-blocked text-blocked-foreground" },
 };
 
-function ReservationCard({ r, dayDate, role, editable, times }: { r: Reservation; dayDate?: string; role: keyof typeof ROLE; editable: boolean; times?: ApartmentTimes }) {
+function ReservationCard({ r, dayDate, role, editable, times }: { r: Reservation; dayDate?: string; role: keyof typeof ROLE; editable: boolean; times?: ApartmentTimes | undefined }) {
   const [editing, setEditing] = useState(false);
   const [editingDates, setEditingDates] = useState(false);
   const [saving, setSaving] = useState(false);

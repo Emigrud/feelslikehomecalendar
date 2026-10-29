@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { expandSplits, rowToReservation } from "./reservation-row";
-import { PREP_COLS, aptTimes } from "./preparation";
+import { aptTimes } from "./preparation";
 
 /** Load (or create on first sign-in) the owner's apartment with its reservations. */
 async function loadApartment() {
@@ -19,12 +19,12 @@ async function loadApartment() {
 
   const res = await supabase
     .from("reservations")
-    .select("id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out, " + PREP_COLS)
+    .select("id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out, prep_beds, prep_bed_note, prep_cot, prep_towels, prep_status, checkin_time, checkout_time, arrival_time")
     .eq("apartment_id", apt.id)
     .order("check_in");
   if (res.error) throw res.error;
 
-  const sp = await supabase.from("reservation_splits").select("id, reservation_id, start_date, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, is_blocked, " + PREP_COLS);
+  const sp = await supabase.from("reservation_splits").select("id, reservation_id, start_date, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, is_blocked, prep_beds, prep_bed_note, prep_cot, prep_towels, prep_status, checkin_time, checkout_time, arrival_time");
   if (sp.error) throw sp.error;
 
   return { id: apt.id, name: apt.name, times: aptTimes(apt), reservations: (res.data ?? []).flatMap((r) => expandSplits(rowToReservation(r), sp.data ?? [])) };

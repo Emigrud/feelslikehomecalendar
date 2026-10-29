@@ -1,11 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { expandSplits, rowToReservation } from "./reservation-row";
-import { PREP_COLS, aptTimes } from "./preparation";
+import { aptTimes } from "./preparation";
 import { isCleanerToken } from "./cleaner-link";
 
-const RES_COLS = "id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out, " + PREP_COLS;
-const SPLIT_COLS = "id, reservation_id, start_date, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, is_blocked, " + PREP_COLS;
+const RES_COLS = "id, source, external_uid, check_in, check_out, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, status, is_blocked, owner_kind, owner_source, first_part_blocked, owner_check_in, owner_check_out, prep_beds, prep_bed_note, prep_cot, prep_towels, prep_status, checkin_time, checkout_time, arrival_time";
+const SPLIT_COLS = "id, reservation_id, start_date, guest_name, adults, kids_ages, comment, checkin_comment, checkout_comment, is_blocked, prep_beds, prep_bed_note, prep_cot, prep_towels, prep_status, checkin_time, checkout_time, arrival_time";
 
 /** Public, read-only: the private link code is the only key. Never returns feed links or the code. */
 export const getCleanerCalendar = createServerFn({ method: "GET" })
