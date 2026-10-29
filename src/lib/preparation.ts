@@ -101,3 +101,7 @@ export function prepToRow(p: Preparation) {
 }
 
 export const PREP_COLS = "prep_beds, prep_bed_note, prep_cot, prep_towels, prep_status, checkin_time, checkout_time, arrival_time";
+
+export function aptTimes(a: { bed_options?: string[] | null; std_checkin_time?: string | null; std_checkout_time?: string | null; timezone?: string | null }): ApartmentTimes {
+  return { bedOptions: a.bed_options ?? [], checkInTime: a.std_checkin_time ?? null, checkOutTime: a.std_checkout_time ?? null, timezone: a.timezone ?? "Europe/Vilnius" };
+}
