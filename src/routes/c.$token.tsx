@@ -50,7 +50,7 @@ function CleanerPage() {
       </header>
       <MonthCalendar year={ym.y} month={ym.m} reservations={data.reservations} onChangeMonth={(y, m) => setYm({ y, m })} onSelectDay={(d) => setSelectedDate(d.date)} />
       <Legend />
-      <DayDetails info={selected} onClose={() => setSelectedDate(null)} />
+      <DayDetails info={selected} onClose={() => setSelectedDate(null)}  times={data.times} />
     </main>
   );
 }

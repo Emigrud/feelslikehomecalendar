@@ -1,3 +1,5 @@
+import type { Preparation } from "./preparation";
+
 export type Source = "airbnb" | "booking";
 
 export interface Reservation {
@@ -23,6 +25,8 @@ export interface Reservation {
   firstPartBlocked?: boolean | null;
   /** Added by hand by the owner; syncs never touch it and it can be deleted. */
   isManual?: boolean;
+  /** Owner-entered preparation and times; separate for each split part. */
+  prep?: Preparation;
 }
 
 export type DayKind = "empty" | "checkin" | "checkout" | "changeover" | "checkout-blocked" | "staying" | "blocked";

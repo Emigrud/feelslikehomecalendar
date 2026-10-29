@@ -1,6 +1,7 @@
 import type { Reservation } from "./calendar";
+import { rowToPrep, type PrepRow } from "./preparation";
 
-export interface ReservationRow {
+export interface ReservationRow extends PrepRow {
   id: string;
   source: string;
   check_in: string;
@@ -45,10 +46,11 @@ export function rowToReservation(r: ReservationRow): Reservation {
     ownerKind: r.owner_kind === "booking" || r.owner_kind === "blocked" ? r.owner_kind : null,
     firstPartBlocked: r.first_part_blocked ?? null,
     isManual: !!r.external_uid?.startsWith("manual-"),
+    prep: rowToPrep(r),
   };
 }
 
-export interface SplitRow {
+export interface SplitRow extends PrepRow {
   id: string;
   reservation_id: string;
   start_date: string;
@@ -74,7 +76,7 @@ export function expandSplits(r: Reservation, splits: SplitRow[]): Reservation[] 
     checkIn: s.start_date, checkOut: ends[i + 1]!,
     guestName: s.guest_name, adults: s.adults, kidsAges: s.kids_ages ?? [], comment: s.comment,
     checkInComment: s.checkin_comment ?? null, checkOutComment: s.checkout_comment ?? null,
-    isBlocked: !!s.is_blocked,
+    isBlocked: !!s.is_blocked, prep: rowToPrep(s),
   }));
   return parts;
 }

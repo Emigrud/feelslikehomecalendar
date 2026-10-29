@@ -80,7 +80,7 @@ function Index() {
         onSelectDay={(d) => setSelectedDate(d.date)}
       />
       <Legend />
-      <DayDetails info={selected} onClose={() => setSelectedDate(null)} editable apartmentId={apt.id} allReservations={apt.reservations} />
+      <DayDetails info={selected} onClose={() => setSelectedDate(null)} editable apartmentId={apt.id} allReservations={apt.reservations}  times={apt.times} />
     </main>
   );
 }
