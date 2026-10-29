@@ -32,13 +32,17 @@ function SettingsPage() {
   const [name, setName] = useState(apt.name);
   const [airbnb, setAirbnb] = useState(apt.airbnb_ical_url ?? "");
   const [booking, setBooking] = useState(apt.booking_ical_url ?? "");
+  const [beds, setBeds] = useState(apt.bed_options.join(", "));
+  const [inTime, setInTime] = useState(apt.std_checkin_time ?? "");
+  const [outTime, setOutTime] = useState(apt.std_checkout_time ?? "");
   const [error, setError] = useState<string | null>(null);
-  const dirty = name !== apt.name || airbnb !== (apt.airbnb_ical_url ?? "") || booking !== (apt.booking_ical_url ?? "");
+  const bedList = beds.split(",").map((b) => b.trim()).filter(Boolean);
+  const dirty = beds !== apt.bed_options.join(", ") || inTime !== (apt.std_checkin_time ?? "") || outTime !== (apt.std_checkout_time ?? "") || name !== apt.name || airbnb !== (apt.airbnb_ical_url ?? "") || booking !== (apt.booking_ical_url ?? "");
   const save = useMutation({
-    mutationFn: () => saveSettings({ data: { name, airbnb, booking } }),
+    mutationFn: () => saveSettings({ data: { name, airbnb, booking, bedOptions: bedList, checkIn: inTime, checkOut: outTime } }),
     onSuccess: async () => {
       setError(null);
-      setName(name.trim()); setAirbnb(airbnb.trim()); setBooking(booking.trim());
+      setName(name.trim()); setAirbnb(airbnb.trim()); setBooking(booking.trim()); setBeds(bedList.join(", ")); setInTime(inTime.trim()); setOutTime(outTime.trim());
       await Promise.all([client.invalidateQueries({ queryKey: ["calendar-settings"] }), client.invalidateQueries({ queryKey: ["apartment"] })]);
       toast.success("Settings saved");
     },
@@ -51,6 +55,14 @@ function SettingsPage() {
     <header className="mb-8"><p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Cleaning calendar</p><h1 className="font-display text-3xl font-bold">Settings</h1></header>
     <form onSubmit={submit} className="space-y-8">
       <section className="space-y-3"><h2 className="font-display text-xl font-semibold">Apartment</h2><Label htmlFor="apartment-name">Apartment name</Label><Input id="apartment-name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={100} disabled={save.isPending} /></section>
+      <section className="space-y-4 border-t pt-6"><h2 className="font-display text-xl font-semibold">Preparation</h2>
+        <div className="space-y-2"><Label htmlFor="bed-options">Bed options</Label><Input id="bed-options" placeholder="e.g. Sofa bed, Double bed" value={beds} onChange={(e) => setBeds(e.target.value)} disabled={save.isPending} /><p className="text-xs text-muted-foreground">Separate with commas.</p></div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2"><Label htmlFor="std-in">Standard check-in</Label><Input id="std-in" placeholder="HH:MM" value={inTime} onChange={(e) => setInTime(e.target.value)} disabled={save.isPending} /></div>
+          <div className="space-y-2"><Label htmlFor="std-out">Standard check-out</Label><Input id="std-out" placeholder="HH:MM" value={outTime} onChange={(e) => setOutTime(e.target.value)} disabled={save.isPending} /></div>
+        </div>
+        <p className="text-xs text-muted-foreground">Times are Vilnius time.</p>
+      </section>
       <section className="space-y-5 border-t pt-6"><h2 className="font-display text-xl font-semibold">Calendar links</h2>
         <div className="space-y-2"><Label htmlFor="airbnb-link" className="flex items-center gap-2"><SourceMark source="airbnb" />Airbnb iCal link</Label><Input id="airbnb-link" type="url" autoComplete="off" spellCheck={false} placeholder="https://www.airbnb.com/…" value={airbnb} onChange={(e) => setAirbnb(e.target.value)} disabled={save.isPending} /></div>
         <div className="space-y-2"><Label htmlFor="booking-link" className="flex items-center gap-2"><SourceMark source="booking" />Booking.com iCal link</Label><Input id="booking-link" type="url" autoComplete="off" spellCheck={false} placeholder="https://admin.booking.com/…" value={booking} onChange={(e) => setBooking(e.target.value)} disabled={save.isPending} /></div>
