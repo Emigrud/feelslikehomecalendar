@@ -64,6 +64,13 @@
       "when": 1793266486953,
       "tag": "0008_preparation_details",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793267137920,
+      "tag": "0009_retire_preparation_details",
+      "breakpoints": true
     }
   ]
 }
