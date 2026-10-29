@@ -10,3 +10,4 @@
 - [x] Preparation details — removed at owner request (comments cover it).
 # Improvement Stage 6
 - [ ] Cleanings list — waiting for the owner to paste it.
+- [x] Cleanings list with Calendar / Cleanings switch, planned cleaning date (adapted to comments, no preparation fields).

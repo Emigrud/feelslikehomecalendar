@@ -16,7 +16,10 @@ export interface CleaningItem {
 
 /** Real guest stays only: active, not greyed out. */
 function guests(all: Reservation[]) {
-  return all.filter((r) => r.status === "active" && !r.isBlocked);
+  const live = all.filter((r) => r.status === "active" && !r.isBlocked);
+  // Like the calendar: a hand-added booking wins over a synced stay it fully covers.
+  const manual = live.filter((r) => r.isManual);
+  return live.filter((r) => r.isManual || !manual.some((m) => m.checkIn <= r.checkIn && r.checkOut <= m.checkOut));
 }
 
 /** One cleaning per departure of a real booking, linked to the next real arrival. Blocks never create cleanings. */

@@ -45,4 +45,10 @@ describe("cleanings list", () => {
     const items = buildCleanings([r({ id: "a", checkIn: "2026-11-01", checkOut: "2026-11-05" }), r({ id: "b", checkIn: "2026-11-03", checkOut: "2026-11-04" })]);
     expect(items.every((i) => i.overlap)).toBe(true);
   });
+
+  it("a synced stay fully covered by a hand-added booking does not create its own cleaning", () => {
+    const items = buildCleanings([r({ id: "m", isManual: true, checkIn: "2026-10-27", checkOut: "2026-10-31" }), r({ id: "s", checkIn: "2026-10-27", checkOut: "2026-10-30" })]);
+    expect(items.map((i) => i.id)).toEqual(["m"]);
+    expect(items[0]!.overlap).toBe(false);
+  });
 });
