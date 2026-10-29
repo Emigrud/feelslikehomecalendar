@@ -7,6 +7,6 @@
 - [x] Split-date box: yyyy/mm/dd, editable, Monday-first calendar popup, prefilled with the tapped day.
 
 # Improvement Stage 5
-- [x] Preparation details, standard times, per-booking times.
+- [x] Preparation details — removed at owner request (comments cover it).
 # Improvement Stage 6
 - [ ] Cleanings list — waiting for the owner to paste it.
