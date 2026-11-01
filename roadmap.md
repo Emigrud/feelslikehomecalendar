@@ -13,4 +13,4 @@
 
 # Phone preview
 - [x] Redirect the old /index preview address to the calendar and keep phone headers within the available width.
-- [ ] Verify the signed-in phone preview, day popup and calendar/cleanings switch.
+- [x] Verify the signed-in phone preview, day popup and calendar/cleanings switch at 360px and 440px; no page errors or horizontal overflow.
