@@ -59,12 +59,12 @@ function Index() {
 
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-2 py-4 sm:px-6 sm:py-8">
-      <header className="mb-4 flex items-start justify-between gap-2 px-1">
-        <div>
+      <header className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 px-1 sm:flex sm:justify-between">
+        <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Cleaning calendar</p>
           <h1 className="break-words font-display text-3xl font-bold">{apt.name}</h1>
         </div>
-        <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
+        <Button className="shrink-0" variant="outline" size="sm" onClick={signOut}>Sign out</Button>
       </header>
       <div className="mb-4 flex items-center justify-between gap-2 px-1">
         <Button asChild size="sm" variant="ghost"><Link to="/settings"><Settings />Settings</Link></Button>

@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Architecture rules
+- The escaped `[index].tsx` route redirects the legacy `/index` preview address to `/`; why: mobile editor history must open the same protected calendar, not a missing page.
 - Owner pages live under `src/routes/_authenticated/` (client-only gate, redirects to `/auth`); why: the login session lives in the browser.
 - One apartment per owner (`apartments.owner_id` unique), created on first load; reservations are owner-only via row access rules; why: single-apartment product, cleaner gets data later only through a server function checking the link code.
 - Database rows are mapped to the calendar `Reservation` type in `src/lib/reservation-row.ts`; why: calendar components stay storage-agnostic.

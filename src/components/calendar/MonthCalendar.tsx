@@ -31,9 +31,9 @@ export function MonthCalendar({ year, month, reservations, onChangeMonth, onSele
 
   return (
     <div className="w-full">
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="font-display text-2xl font-semibold capitalize">{title}</h2>
-        <div className="flex items-center gap-1">
+      <div className="mb-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:flex sm:justify-between">
+        <h2 className="min-w-0 font-display text-xl font-semibold capitalize sm:text-2xl">{title}</h2>
+        <div className="flex shrink-0 items-center gap-1">
           <Button variant="outline" size="icon" onClick={() => shift(-1)} aria-label="Previous month"><ChevronLeft /></Button>
           <Button variant="outline" onClick={() => { const n = new Date(); onChangeMonth(n.getFullYear(), n.getMonth()); }}>Today</Button>
           <Button variant="outline" size="icon" onClick={() => shift(1)} aria-label="Next month"><ChevronRight /></Button>
