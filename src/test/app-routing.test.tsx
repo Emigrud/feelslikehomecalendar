@@ -25,7 +25,7 @@ describe("App routing", () => {
     // Redirect-only beforeLoad does not read the router context.
     if (!beforeLoad) throw new Error("Missing preview redirect");
     try {
-      await beforeLoad({} as Parameters<typeof beforeLoad>[0]);
+      await beforeLoad({} as NonNullable<Parameters<typeof beforeLoad>[0]>);
       throw new Error("Expected /index to redirect");
     } catch (result) {
       expect(result).toMatchObject({ options: { to: "/", replace: true } });
