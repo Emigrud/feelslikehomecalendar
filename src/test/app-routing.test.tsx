@@ -14,4 +14,21 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("redirects the old /index preview address to the calendar", async () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const alias = router.matchRoutes("/index").at(-1);
+    expect(alias?.routeId).toBe("/index");
+    const route = router.routesById["/index"];
+    const beforeLoad = route.options.beforeLoad;
+    expect(beforeLoad).toBeTypeOf("function");
+    // Redirect-only beforeLoad does not read the router context.
+    if (!beforeLoad) throw new Error("Missing preview redirect");
+    try {
+      await beforeLoad({} as Parameters<typeof beforeLoad>[0]);
+      throw new Error("Expected /index to redirect");
+    } catch (result) {
+      expect(result).toMatchObject({ options: { to: "/", replace: true } });
+    }
+  });
 });

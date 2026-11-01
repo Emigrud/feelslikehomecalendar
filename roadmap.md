@@ -10,3 +10,7 @@
 - [x] Preparation details — removed at owner request (comments cover it).
 # Improvement Stage 6
 - [x] Cleanings list with Calendar / Cleanings switch, planned cleaning date (adapted to comments, no preparation fields).
+
+# Phone preview
+- [x] Redirect the old /index preview address to the calendar and keep phone headers within the available width.
+- [ ] Verify the signed-in phone preview, day popup and calendar/cleanings switch.
