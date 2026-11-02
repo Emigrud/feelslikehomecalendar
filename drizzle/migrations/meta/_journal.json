@@ -85,6 +85,13 @@
       "when": 1793657216651,
       "tag": "0011_protect_restored_bookings_from_feed_omission",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793657873066,
+      "tag": "0012_keep_started_stays_on_feed_omission",
+      "breakpoints": true
     }
   ]
 }
