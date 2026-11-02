@@ -12,7 +12,7 @@ describe("owner-confirmed restored booking", () => {
     await db.exec(`
       CREATE TABLE public.apartments (id uuid PRIMARY KEY, airbnb_ical_url text, booking_ical_url text);
       CREATE TABLE public.reservations (
-        id uuid PRIMARY KEY, apartment_id uuid, source text, external_uid text,
+        id uuid PRIMARY KEY DEFAULT gen_random_uuid(), apartment_id uuid, source text, external_uid text,
         check_in date, check_out date, is_blocked boolean, status text,
         guest_name text, adults integer, updated_at timestamptz,
         UNIQUE(apartment_id, source, external_uid)
