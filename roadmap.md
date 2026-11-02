@@ -16,5 +16,5 @@
 - [x] Verify the signed-in phone preview, day popup and calendar/cleanings switch at 360px and 440px; no page errors or horizontal overflow.
 
 # Restore November departure
-- [ ] Restore valsala saniya, 2–3 November, and protect against feed omission.
-- [ ] Verify sync protection and the signed-in calendar.
+- [x] Restore valsala saniya, 2–3 November, and protect against feed omission.
+- [x] Verify sync protection and the signed-in calendar after live sync; hide the unnamed duplicate without deleting it.
