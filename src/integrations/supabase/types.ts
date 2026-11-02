@@ -172,6 +172,7 @@ export type Database = {
           prep_cot: string
           prep_status: string
           prep_towels: number | null
+          preserve_on_feed_omission: boolean
           source: string
           status: string
           updated_at: string
@@ -205,6 +206,7 @@ export type Database = {
           prep_cot?: string
           prep_status?: string
           prep_towels?: number | null
+          preserve_on_feed_omission?: boolean
           source: string
           status?: string
           updated_at?: string
@@ -238,6 +240,7 @@ export type Database = {
           prep_cot?: string
           prep_status?: string
           prep_towels?: number | null
+          preserve_on_feed_omission?: boolean
           source?: string
           status?: string
           updated_at?: string
