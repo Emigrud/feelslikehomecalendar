@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -20,7 +19,7 @@ describe("owner-confirmed restored booking", () => {
       );
       INSERT INTO public.apartments VALUES ('${apartmentId}', NULL, 'https://admin.booking.com/test');
     `);
-    await db.exec(readFileSync(new URL("../../drizzle/migrations/0011_protect_restored_bookings_from_feed_omission.sql", import.meta.url), "utf8"));
+    await db.exec(readFileSync("drizzle/migrations/0011_protect_restored_bookings_from_feed_omission.sql", "utf8"));
     await db.exec(`INSERT INTO public.reservations
       (id, apartment_id, source, external_uid, check_in, check_out, is_blocked, status, guest_name, adults, preserve_on_feed_omission)
       VALUES ('${restoredId}', '${apartmentId}', 'booking', '${uid}', '2026-11-02', '2026-11-03', false, 'active', 'valsala saniya', 1, true),
