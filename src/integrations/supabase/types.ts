@@ -157,7 +157,10 @@ export type Database = {
           cleaning_time: string | null
           comment: string | null
           created_at: string
+          extension_parent_id: string | null
           external_uid: string
+          feed_check_in: string | null
+          feed_check_out: string | null
           first_part_blocked: boolean | null
           guest_name: string | null
           id: string
@@ -173,6 +176,7 @@ export type Database = {
           prep_status: string
           prep_towels: number | null
           preserve_on_feed_omission: boolean
+          smart_extension_managed: boolean
           source: string
           status: string
           updated_at: string
@@ -191,7 +195,10 @@ export type Database = {
           cleaning_time?: string | null
           comment?: string | null
           created_at?: string
+          extension_parent_id?: string | null
           external_uid: string
+          feed_check_in?: string | null
+          feed_check_out?: string | null
           first_part_blocked?: boolean | null
           guest_name?: string | null
           id?: string
@@ -207,6 +214,7 @@ export type Database = {
           prep_status?: string
           prep_towels?: number | null
           preserve_on_feed_omission?: boolean
+          smart_extension_managed?: boolean
           source: string
           status?: string
           updated_at?: string
@@ -225,7 +233,10 @@ export type Database = {
           cleaning_time?: string | null
           comment?: string | null
           created_at?: string
+          extension_parent_id?: string | null
           external_uid?: string
+          feed_check_in?: string | null
+          feed_check_out?: string | null
           first_part_blocked?: boolean | null
           guest_name?: string | null
           id?: string
@@ -241,6 +252,7 @@ export type Database = {
           prep_status?: string
           prep_towels?: number | null
           preserve_on_feed_omission?: boolean
+          smart_extension_managed?: boolean
           source?: string
           status?: string
           updated_at?: string
@@ -251,6 +263,13 @@ export type Database = {
             columns: ["apartment_id"]
             isOneToOne: false
             referencedRelation: "apartments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reservations_extension_parent_id_fkey"
+            columns: ["extension_parent_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
             referencedColumns: ["id"]
           },
         ]
