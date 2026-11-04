@@ -6,7 +6,8 @@ const db = new PGlite();
 const apt = "44b1bde1-7793-48f1-a04a-fa8dba1f5c95";
 const parent = "00000000-0000-0000-0000-000000000001";
 const migration = readdirSync("drizzle/migrations").find((f) => f.endsWith("smart_booking_extensions.sql"));
-const sql = readFileSync(migration ? `drizzle/migrations/${migration}` : "/tmp/smart-extension.sql", "utf8");
+if (!migration) throw new Error("Smart extension migration is missing");
+const sql = readFileSync(`drizzle/migrations/${migration}`, "utf8");
 const feed = (end = "2099-11-26", status = "active") => [{ external_uid: "merged", check_in: "2099-11-07", check_out: end, is_blocked: false, status }];
 const sync = (events = feed()) => db.query("SELECT apply_calendar_feed($1, 'booking', 'https://admin.booking.com/test', $2::jsonb)", [apt, JSON.stringify(events)]);
 

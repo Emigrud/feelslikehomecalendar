@@ -35,6 +35,14 @@ describe("calendar rules", () => {
 });
 
 describe("owner-added booking inside a synced stay", () => {
+  it("22 November shows manual checkout and new Booking.com extension check-in together", () => {
+    const departure = r({ id: "Sanita", source: "booking", isManual: true, checkIn: "2026-11-20", checkOut: "2026-11-22" });
+    const extension = r({ id: "extension", source: "booking", checkIn: "2026-11-22", checkOut: "2026-11-26" });
+    const info = dayInfo("2026-11-22", [departure, extension]);
+    expect(info.kind).toBe("changeover");
+    expect(info.checkOut?.id).toBe("Sanita");
+    expect(info.checkIn?.id).toBe("extension");
+  });
   const synced = r({ id: "s", source: "booking", checkIn: "2026-11-10", checkOut: "2026-11-20" });
   const mine = r({ id: "m", checkIn: "2026-11-14", checkOut: "2026-11-17", isManual: true });
   it("its check-in day is a changeover", () => {

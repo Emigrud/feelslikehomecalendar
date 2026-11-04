@@ -79,7 +79,7 @@ export function dayInfo(date: string, all: Reservation[]): DayInfo {
   if (mStay) {
     staying = mStay;
   } else {
-    checkIn = mIn ?? (mOut ? undefined : synced.find((r) => r.checkIn === date));
+    checkIn = mIn ?? synced.find((r) => r.checkIn === date);
     checkOut = mOut ?? synced.find((r) => r.checkOut === date) ?? (mIn ? covering : undefined);
     staying = checkIn || checkOut ? (mOut && !mIn ? covering : undefined) : covering;
   }
