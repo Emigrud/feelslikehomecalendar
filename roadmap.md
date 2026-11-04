@@ -21,5 +21,5 @@
 - [x] Verify sync protection and the signed-in calendar after live sync; hide the unnamed duplicate without deleting it.
 
 # Smart Booking.com extensions
-- [ ] Import newly added dates separately without changing owner bookings, blocks, comments or splits.
-- [ ] Test repeat sync, covered dates and cancellation; verify the owner's November calendar after sync.
+- [x] Import newly added dates separately without changing owner bookings, blocks, comments or splits.
+- [x] Test repeat sync, covered dates and cancellation; verify the owner's November calendar after sync.
