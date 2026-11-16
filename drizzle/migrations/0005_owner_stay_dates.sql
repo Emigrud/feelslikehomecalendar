@@ -1,2 +1,0 @@
-ALTER TABLE public.reservations ADD COLUMN owner_check_in date, ADD COLUMN owner_check_out date;
-ALTER TABLE public.reservations ADD CONSTRAINT owner_dates_order CHECK (owner_check_in IS NULL OR owner_check_out IS NULL OR owner_check_in < owner_check_out);

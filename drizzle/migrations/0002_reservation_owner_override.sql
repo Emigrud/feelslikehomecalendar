@@ -1,1 +1,0 @@
-ALTER TABLE public.reservations ADD COLUMN owner_kind text CHECK (owner_kind IN ('booking','blocked')), ADD COLUMN owner_source text CHECK (owner_source IN ('airbnb','booking'));
